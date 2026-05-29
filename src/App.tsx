@@ -1,43 +1,65 @@
 import { useState } from "react";
+import { parseBlob, type IAudioMetadata } from "music-metadata";
 import "./App.css";
 
 function App() {
   const [files, setFiles] = useState<File[]>([]);
   const [playing, setPlaying] = useState("");
+  const [metadata, setMetadata] = useState<IAudioMetadata>(undefined);
 
-  const switchPlaying = (index: number) => {
+  async function switchPlaying(index: number) {
     window.URL.revokeObjectURL(playing);
     setFiles((prevFiles) => prevFiles.slice(index));
     setPlaying(window.URL.createObjectURL(files[index]));
-  };
+    await getMetadata(files[index]);
+  }
 
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  async function getMetadata(file: File) {
+    setMetadata(await parseBlob(file));
+  }
+
+  console.log(metadata);
+
+  async function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
       const filesArray: File[] = Array.from(e.target.files);
       setFiles(filesArray);
       setPlaying(window.URL.createObjectURL(filesArray[0]));
+      await getMetadata(filesArray[0]);
     }
-  };
+  }
 
-  const handleEndOfPlay = () => {
+  async function handleEndOfPlay() {
     if (files.length > 0) {
-      switchPlaying(1);
+      await switchPlaying(1);
     }
-  };
+  }
 
-  const handleFileNameClick = (index: number) => {
-    switchPlaying(index);
-  };
+  async function handleFileNameClick(index: number) {
+    await switchPlaying(index);
+  }
 
   return (
     <>
       <section id="center">
+        <h1>WeLC</h1>
+        {metadata && (
+          <>
+            <p>Now playing:</p>
+            <ul className="metadata">
+              <li>Title: {metadata.common.title}</li>
+              <li>Artist: {metadata.common.artist}</li>
+              <li>Album: {metadata.common.album}</li>
+              <li>Track #: {metadata.common.track.no}</li>
+            </ul>
+          </>
+        )}
         {files.length > 0 && (
           <audio
             controls
             autoPlay
             src={playing}
-            onEnded={handleEndOfPlay}
+            onEnded={async () => await handleEndOfPlay()}
           ></audio>
         )}
         <input
@@ -45,14 +67,14 @@ function App() {
           name="files"
           accept="audio/*"
           multiple
-          onChange={handleFileInput}
+          onChange={async (e) => await handleFileInput(e)}
         />
-        <ul>
+        <ul className="playlist">
           {files.length > 0 &&
             files.map((file, index) => (
               <li
                 key={`${file.name}-${index}`}
-                onClick={() => handleFileNameClick(index)}
+                onClick={async () => await handleFileNameClick(index)}
               >
                 {file.name}
               </li>
