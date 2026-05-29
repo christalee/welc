@@ -1,0 +1,17 @@
+Concept: audio player web app, reading from local or networked machine
+
+Flask backend? or pure frontend?
+need to read up on the <audio> tag and its affordances
+also how filesystem access is managed in the browser
+also networking / ports
+
+0. start a React app and have it display a list of filenames from a user-input location (local to start)
+1. when you click a filename, it plays the audio
+2. separate playlist / audio playback components; playback moves down the playlist
+3. read metadata instead of filenames
+4. enqueue new files at the end of the playlist (optionally replace the entire playlist)
+
+Other features
+- networking / reading from austenite (might need an auth solution)
+- search bar
+- set one or more media library locations
