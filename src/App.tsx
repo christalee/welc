@@ -5,7 +5,13 @@ function App() {
   const [files, setFiles] = useState<File[]>([]);
   const [playing, setPlaying] = useState('');
 
-  const handleFileSelect = (e) => {
+  const switchPlaying = (index: number) => {
+    window.URL.revokeObjectURL(playing);
+    setFiles((prevFiles) => prevFiles.slice(index));
+    setPlaying(window.URL.createObjectURL(files[index]));
+  }
+
+  const handleFileInput = (e) => {
     const filesArray: File[] = Array.from(e.target.files);
     setFiles(filesArray);
     setPlaying(window.URL.createObjectURL(filesArray[0]));
@@ -13,19 +19,21 @@ function App() {
 
   const handleEndOfPlay = () => {
     if (files.length > 0) {
-      window.URL.revokeObjectURL(playing)
-      setFiles((prevFiles) => prevFiles.slice(1));
-      setPlaying(window.URL.createObjectURL(files[1]))
+      switchPlaying(1);
     }
+  }
+
+  const handleFileNameClick = (e, index: number) => {
+    switchPlaying(index);
   }
 
   return (
     <>
       <section id="center">
         {files.length > 0 && (<audio controls autoPlay src={playing} onEnded={handleEndOfPlay}></audio>)}
-        <input type="file" name="files" accept="audio/*" multiple onChange={handleFileSelect} />
+        <input type="file" name="files" accept="audio/*" multiple onChange={handleFileInput} />
         <ul>
-          {files.length > 0 && files.map((file, index) => (<li key={`${file.name}-${index}`}>{file.name}</li>))}
+          {files.length > 0 && files.map((file, index) => (<li key={`${file.name}-${index}`} onClick={(e) => handleFileNameClick(e, index)}>{file.name}</li>))}
         </ul>
       </section>
       <div className="ticks"></div>
