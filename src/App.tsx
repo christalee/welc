@@ -5,7 +5,9 @@ import "./App.css";
 function App() {
   const [files, setFiles] = useState<File[]>([]);
   const [playing, setPlaying] = useState("");
-  const [metadata, setMetadata] = useState<IAudioMetadata>(undefined);
+  const [metadata, setMetadata] = useState<IAudioMetadata | undefined>(
+    undefined,
+  );
 
   async function switchPlaying(index: number) {
     window.URL.revokeObjectURL(playing);
@@ -17,8 +19,6 @@ function App() {
   async function getMetadata(file: File) {
     setMetadata(await parseBlob(file));
   }
-
-  console.log(metadata);
 
   async function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
@@ -46,7 +46,7 @@ function App() {
         {metadata && (
           <>
             <p>Now playing:</p>
-            <ul className="metadata">
+            <ul data-test="metadata" className="metadata">
               <li>Title: {metadata.common.title}</li>
               <li>Artist: {metadata.common.artist}</li>
               <li>Album: {metadata.common.album}</li>
@@ -56,6 +56,7 @@ function App() {
         )}
         {files.length > 0 && (
           <audio
+            data-test="audio"
             controls
             autoPlay
             src={playing}
@@ -65,11 +66,12 @@ function App() {
         <input
           type="file"
           name="files"
+          data-test="fileInput"
           accept="audio/*"
           multiple
           onChange={async (e) => await handleFileInput(e)}
         />
-        <ul className="playlist">
+        <ul data-test="playlist" className="playlist">
           {files.length > 0 &&
             files.map((file, index) => (
               <li
