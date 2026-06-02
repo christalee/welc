@@ -43,45 +43,12 @@ function App() {
     <>
       <section id="center">
         <h1>WeLC</h1>
-        {metadata && (
-          <>
-            <p>Now playing:</p>
-            <ul data-test="metadata" className="metadata">
-              <li>Title: {metadata.common.title}</li>
-              <li>Artist: {metadata.common.artist}</li>
-              <li>Album: {metadata.common.album}</li>
-              <li>Track #: {metadata.common.track.no}</li>
-            </ul>
-          </>
-        )}
+        {metadata && <Metadata metadata={metadata} />}
         {files.length > 0 && (
-          <audio
-            data-test="audio"
-            controls
-            autoPlay
-            src={playing}
-            onEnded={async () => await handleEndOfPlay()}
-          ></audio>
+          <Player playing={playing} handleEndOfPlay={handleEndOfPlay} />
         )}
-        <input
-          type="file"
-          name="files"
-          data-test="fileInput"
-          accept="audio/*"
-          multiple
-          onChange={async (e) => await handleFileInput(e)}
-        />
-        <ul data-test="playlist" className="playlist">
-          {files.length > 0 &&
-            files.map((file, index) => (
-              <li
-                key={`${file.name}-${index}`}
-                onClick={async () => await handleFileNameClick(index)}
-              >
-                {file.name}
-              </li>
-            ))}
-        </ul>
+        <FileInput handleFileInput={handleFileInput} />
+        <Playlist files={files} handleFileNameClick={handleFileNameClick} />
       </section>
       <div className="ticks"></div>
       <section id="spacer"></section>

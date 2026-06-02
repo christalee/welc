@@ -6,10 +6,9 @@ describe("WeLC", () => {
 
   it("allows the user to select a file and displays/plays the result", () => {
     cy.visit("http://localhost:5173/");
-    // Before you select a file, the audio element should not exist
-    // and the playlist should be empty
+    // Before you select a file, the audio element and playlist should not exist
     cy.get("[data-test='audio']").should("not.exist");
-    cy.get("[data-test='playlist']").should("be.empty");
+    cy.get("[data-test='playlist']").should("not.exist");
 
     cy.get("input[type=file]").selectFile("cypress/fixtures/audio1.mp3");
     cy.wait(500);
