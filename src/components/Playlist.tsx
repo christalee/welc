@@ -1,3 +1,5 @@
+import styles from './playlist.module.scss';
+
 function Playlist({
   files,
   handleFileNameClick,
@@ -7,7 +9,7 @@ function Playlist({
 }) {
   if (files.length === 0) return null;
   return (
-    <ul data-test="playlist" className="playlist">
+    <ul data-test="playlist" className={styles.playlist}>
       {files.map((file, index) => (
         <li
           key={`${file.name}-${index}`}
