@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "e2e": "cypress run --browser chrome"
   },
   "dependencies": {
     "music-metadata": "^11.12.3",

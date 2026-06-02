@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { parseBlob, type IAudioMetadata } from "music-metadata";
+
+import Metadata from "./components/Metadata";
+import Player from "./components/Player";
+import FileInput from "./components/FileInput";
+import Playlist from "./components/Playlist";
 import "./App.css";
 
 function App() {
@@ -30,8 +35,14 @@ function App() {
   }
 
   async function handleEndOfPlay() {
-    if (files.length > 0) {
+    // don't run at the end of the last file when files.length is 1
+    if (files.length > 1) {
       await switchPlaying(1);
+    } else { // clean up
+      window.URL.revokeObjectURL(playing);
+      setPlaying("");
+      setMetadata(undefined);
+      setFiles([]);
     }
   }
 
