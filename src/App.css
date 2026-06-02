@@ -24,6 +24,11 @@
   }
 }
 
+.inputs {
+  display: flex;
+  gap: 24px;
+}
+
 .ticks {
   position: relative;
   width: 100%;

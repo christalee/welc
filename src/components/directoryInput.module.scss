@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  opacity: 0;
+}
+
+label {
+  border: 1px solid var(--border);
+  padding: 8px;
+}
