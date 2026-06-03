@@ -8,7 +8,7 @@ function FileInput({
   ) => Promise<void>;
 }) {
   return (
-    <div className={styles.container}>
+    <>
       <label htmlFor="files">Select Files</label>
       <input
         type="file"
@@ -20,7 +20,7 @@ function FileInput({
         className={styles.input}
         onChange={async (e) => await handleFileInput(e)}
       />
-    </div>
+    </>
   );
 }
 

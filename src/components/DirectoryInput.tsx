@@ -1,4 +1,5 @@
-import styles from './directoryInput.module.scss';
+// Uses identical styles to the other input
+import styles from './fileInput.module.scss';
 
 function DirectoryInput({
   handleDirectoryInput,
@@ -8,7 +9,7 @@ function DirectoryInput({
   ) => Promise<void>;
 }) {
   return (
-    <div className={styles.container}>
+    <>
       <label htmlFor="directories">Select Directories</label>
       <input
         type="file"
@@ -19,7 +20,7 @@ function DirectoryInput({
         className={styles.input}
         onChange={async (e) => await handleDirectoryInput(e)}
       />
-    </div>
+    </>
   );
 }
 

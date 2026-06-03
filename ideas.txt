@@ -15,3 +15,13 @@ Other features
 - networking / reading from austenite (might need an auth solution)
 - search bar
 - set one or more media library locations
+- sort / shuffle playlist?
+
+
+
+TODO
+- write tests for directory input
+- re-investigate input visibility/display/opacity vs. e2e tests
+- write component tests
+- merge? mixin? stylesheets for inputs
+- responsive design testing
