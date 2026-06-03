@@ -10,7 +10,10 @@ describe("WeLC", () => {
     cy.get("[data-test='audio']").should("not.exist");
     cy.get("[data-test='playlist']").should("not.exist");
 
-    cy.get("[data-test='fileInput']").selectFile("cypress/fixtures/audio1.mp3", { force: true });
+    cy.get("[data-test='fileInput']").selectFile(
+      "cypress/fixtures/audio1.mp3",
+      { force: true },
+    );
     cy.wait(1000);
 
     // Now audio should play and the filename/metadata should appear
@@ -33,11 +36,14 @@ describe("WeLC", () => {
 
   it("allows the user to select multiple files and click on one to play it", () => {
     cy.visit("http://localhost:5173/");
-    cy.get("[data-test='fileInput']").selectFile([
-      "cypress/fixtures/audio1.mp3",
-      "cypress/fixtures/audio2.mp3",
-      "cypress/fixtures/audio3.mp3",
-    ], { force: true });
+    cy.get("[data-test='fileInput']").selectFile(
+      [
+        "cypress/fixtures/audio1.mp3",
+        "cypress/fixtures/audio2.mp3",
+        "cypress/fixtures/audio3.mp3",
+      ],
+      { force: true },
+    );
     cy.wait(500);
 
     const expectedPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
@@ -68,6 +74,28 @@ describe("WeLC", () => {
     });
   });
 
+  it("appends subsequently selected files to the end of the playlist", () => {
+    cy.visit("http://localhost:5173/");
+    cy.get("[data-test='fileInput']").selectFile(
+      "cypress/fixtures/audio1.mp3",
+      { force: true },
+    );
+
+    cy.get("[data-test='playlist']>li").contains("audio1.mp3").should("exist");
+    cy.get("[data-test='playlist']>li").contains("audio2.mp3").should("not.exist");
+
+    cy.get("[data-test='fileInput']").selectFile(
+      "cypress/fixtures/audio2.mp3",
+      { force: true },
+    );
+
+    const expectedPlaylist = ["audio1.mp3", "audio2.mp3"];
+    cy.get("[data-test='playlist']>li").then((elements) => {
+      const actualPlaylist = [...elements].map((li) => li.innerText.trim());
+      expect(actualPlaylist).to.deep.equal(expectedPlaylist);
+    });
+  });
+
   // SKIP cypress doesn't recognize the directory input functionality
   // it("allows the user to select a directory and play all the audio files in it", () => {
   //   cy.visit("http://localhost:5173/");
@@ -85,11 +113,14 @@ describe("WeLC", () => {
 
   it("plays the next track after the first track is finished", () => {
     cy.visit("http://localhost:5173/");
-    cy.get("[data-test='fileInput']").selectFile([
-      "cypress/fixtures/audio1.mp3",
-      "cypress/fixtures/audio2.mp3",
-      "cypress/fixtures/audio3.mp3",
-    ], { force: true });
+    cy.get("[data-test='fileInput']").selectFile(
+      [
+        "cypress/fixtures/audio1.mp3",
+        "cypress/fixtures/audio2.mp3",
+        "cypress/fixtures/audio3.mp3",
+      ],
+      { force: true },
+    );
     cy.get("[data-test='audio']").then((audioEl) => {
       const audio = audioEl[0] as HTMLAudioElement;
       audio.currentTime = 166; // audio1.mp3 is 2:47s
@@ -115,7 +146,10 @@ describe("WeLC", () => {
 
   it("resets the app when the end of the last file is reached", () => {
     cy.visit("http://localhost:5173/");
-    cy.get("[data-test='fileInput']").selectFile("cypress/fixtures/audio1.mp3", { force: true });
+    cy.get("[data-test='fileInput']").selectFile(
+      "cypress/fixtures/audio1.mp3",
+      { force: true },
+    );
 
     // after playing to the end of the file, the audio element should disappear
     // and the metadata and playlist should clear

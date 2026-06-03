@@ -20,8 +20,8 @@ Other features
 
 
 TODO
-- write tests for directory input
-- re-investigate input visibility/display/opacity vs. e2e tests
+- WONTFIX write tests for directory input
+- DONE re-investigate input visibility/display/opacity vs. e2e tests
 - write component tests
-- merge? mixin? stylesheets for inputs
+- DONE merge? mixin? stylesheets for inputs
 - responsive design testing

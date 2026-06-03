@@ -16,9 +16,12 @@ function App() {
   );
 
   async function startPlaying(filesArray: File[]) {
-    setFiles(filesArray);
-    setPlaying(window.URL.createObjectURL(filesArray[0]));
-    await getMetadata(filesArray[0]);
+    const newFiles = [...files, ...filesArray];
+    if (files.length === 0) {
+      setPlaying(window.URL.createObjectURL(newFiles[0]));
+      await getMetadata(newFiles[0]);
+    }
+    setFiles(newFiles);
   }
 
   async function switchPlaying(index: number) {
@@ -48,7 +51,7 @@ function App() {
     }
   }
 
-  async function handleEndOfPlay() {
+  async function handleEndOfFile() {
     // don't run at the end of the last file, when files.length is 1
     if (files.length > 1) {
       await switchPlaying(1);
@@ -71,7 +74,7 @@ function App() {
         <h1>WeLC</h1>
         {metadata && <Metadata metadata={metadata} />}
         {files.length > 0 && (
-          <Player playing={playing} handleEndOfPlay={handleEndOfPlay} />
+          <Player playing={playing} handleEndOfFile={handleEndOfFile} />
         )}
         <div className="inputs">
           <DirectoryInput handleDirectoryInput={handleDirectoryInput} />

@@ -1,9 +1,9 @@
 function Player({
   playing,
-  handleEndOfPlay,
+  handleEndOfFile,
 }: {
   playing: string;
-  handleEndOfPlay: () => Promise<void>;
+  handleEndOfFile: () => Promise<void>;
 }) {
   return (
     <audio
@@ -11,7 +11,7 @@ function Player({
       controls
       autoPlay
       src={playing}
-      onEnded={async () => await handleEndOfPlay()}
+      onEnded={async () => await handleEndOfFile()}
     ></audio>
   );
 }
