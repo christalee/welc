@@ -10,7 +10,7 @@ function DirectoryInput({
 }) {
   return (
     <>
-      <label htmlFor="directories">Select Directories</label>
+      <label htmlFor="directories">Select Directory</label>
       <input
         type="file"
         id="directories"
