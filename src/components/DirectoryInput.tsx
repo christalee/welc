@@ -16,6 +16,7 @@ function DirectoryInput({
         id="directories"
         name="directories"
         data-test="directoryInput"
+        /* @ts-expect-error this is a valid attribute */
         webkitdirectory="true"
         className={styles.input}
         onChange={async (e) => await handleDirectoryInput(e)}
