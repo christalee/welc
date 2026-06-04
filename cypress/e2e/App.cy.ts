@@ -74,6 +74,25 @@ describe("WeLC", () => {
     });
   });
 
+  it("sorts input by filename on upload", () => {
+    cy.visit("http://localhost:5173/");
+    cy.get("[data-test='fileInput']").selectFile(
+      [
+        "cypress/fixtures/audio3.mp3",
+        "cypress/fixtures/audio2.mp3",
+        "cypress/fixtures/audio1.mp3",
+      ],
+      { force: true },
+    );
+    cy.wait(500);
+
+    const expectedPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
+    cy.get("[data-test='playlist']>li").then((elements) => {
+      const actualPlaylist = [...elements].map((li) => li.innerText.trim());
+      expect(actualPlaylist).to.deep.equal(expectedPlaylist);
+    });
+  });
+
   it("appends subsequently selected files to the end of the playlist", () => {
     cy.visit("http://localhost:5173/");
     cy.get("[data-test='fileInput']").selectFile(

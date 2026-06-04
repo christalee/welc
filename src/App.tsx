@@ -8,6 +8,15 @@ import Playlist from "./components/Playlist";
 import "./App.css";
 import DirectoryInput from "./components/DirectoryInput";
 
+const sortByName = (a: File, b: File) => {
+  if (a.name > b.name) {
+    return 1;
+  } else if (a.name < b.name) {
+    return -1;
+  }
+  return 0;
+};
+
 function App() {
   const [files, setFiles] = useState<File[]>([]);
   const [playing, setPlaying] = useState("");
@@ -37,16 +46,16 @@ function App() {
 
   async function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
-      const filesArray: File[] = Array.from(e.target.files);
+      const filesArray: File[] = Array.from(e.target.files).sort(sortByName);
       await startPlaying(filesArray);
     }
   }
 
   async function handleDirectoryInput(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
-      const filesArray: File[] = Array.from(e.target.files).filter((file) =>
-        file.type.includes("audio"),
-      );
+      const filesArray: File[] = Array.from(e.target.files)
+        .filter((file) => file.type.includes("audio"))
+        .sort(sortByName);
       await startPlaying(filesArray);
     }
   }
