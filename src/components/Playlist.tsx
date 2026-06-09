@@ -31,21 +31,25 @@ function Playlist({
           icon={faArrowDownShortWide}
           className={styles.control}
           onClick={handleSortAsc}
+          data-test="sortAsc"
         />
         <FontAwesomeIcon
           icon={faArrowDownWideShort}
           className={styles.control}
           onClick={handleSortDesc}
+          data-test="sortDesc"
         />
         <FontAwesomeIcon
           icon={faShuffle}
           className={styles.control}
           onClick={handleShuffle}
+          data-test="shuffle"
         />
         <FontAwesomeIcon
           icon={faTrash}
           className={styles.control}
           onClick={handleEmptyPlaylist}
+          data-test="trash"
         />
       </div>
       <ul data-test="playlist" className={styles.playlist}>

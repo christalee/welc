@@ -101,7 +101,9 @@ describe("WeLC", () => {
     );
 
     cy.get("[data-test='playlist']>li").contains("audio1.mp3").should("exist");
-    cy.get("[data-test='playlist']>li").contains("audio2.mp3").should("not.exist");
+    cy.get("[data-test='playlist']>li")
+      .contains("audio2.mp3")
+      .should("not.exist");
 
     cy.get("[data-test='fileInput']").selectFile(
       "cypress/fixtures/audio2.mp3",
@@ -181,6 +183,124 @@ describe("WeLC", () => {
 
     audioEl.should("not.exist");
     cy.get("[data-test='metadata']>li").should("have.length", 0);
+    cy.get("[data-test='playlist']").should("not.exist");
+  });
+
+  it("sorts the playlist in ascending order by default upon upload", () => {
+    cy.visit("http://localhost:5173/");
+    cy.get("[data-test='fileInput']").selectFile(
+      [
+        "cypress/fixtures/audio3.mp3",
+        "cypress/fixtures/audio2.mp3",
+        "cypress/fixtures/audio1.mp3",
+      ],
+      { force: true },
+    );
+
+    const expectedPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
+    cy.get("[data-test='playlist']>li").then((elements) => {
+      const actualPlaylist = [...elements].map((li) => li.innerText.trim());
+      expect(actualPlaylist).to.deep.equal(expectedPlaylist);
+    });
+  });
+
+  it("sorts the playlist in descending/ascending order when the sort buttons are clicked", () => {
+    cy.visit("http://localhost:5173/");
+    cy.get("[data-test='fileInput']").selectFile(
+      [
+        "cypress/fixtures/audio3.mp3",
+        "cypress/fixtures/audio2.mp3",
+        "cypress/fixtures/audio1.mp3",
+      ],
+      { force: true },
+    );
+
+    // same behavior as previous test, in case that test changes
+    const expectedPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
+    cy.get("[data-test='playlist']>li").then((elements) => {
+      const actualPlaylist = [...elements].map((li) => li.innerText.trim());
+      expect(actualPlaylist).to.deep.equal(expectedPlaylist);
+    });
+
+    // first sort desc to change the order
+    cy.get("[data-test='sortDesc']").click();
+    const descPlaylist = ["audio3.mp3", "audio2.mp3", "audio1.mp3"];
+    cy.get("[data-test='playlist']>li").then((elements) => {
+      const actualPlaylist = [...elements].map((li) => li.innerText.trim());
+      expect(actualPlaylist).to.deep.equal(descPlaylist);
+    });
+
+    // then sort asc to change the order
+    cy.get("[data-test='sortAsc']").click();
+    const ascPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
+    cy.get("[data-test='playlist']>li").then((elements) => {
+      const actualPlaylist = [...elements].map((li) => li.innerText.trim());
+      expect(actualPlaylist).to.deep.equal(ascPlaylist);
+    });
+  });
+
+  it("shuffles the playlist when the shuffle button is clicked", () => {
+    cy.visit("http://localhost:5173/");
+    cy.get("[data-test='fileInput']").selectFile(
+      [
+        "cypress/fixtures/audio3.mp3",
+        "cypress/fixtures/audio2.mp3",
+        "cypress/fixtures/audio1.mp3",
+        "cypress/fixtures/audio3.mp3",
+        "cypress/fixtures/audio2.mp3",
+        "cypress/fixtures/audio1.mp3",
+      ],
+      { force: true },
+    );
+
+    // same behavior as previous test, in case that test changes
+    const initialPlaylist = [
+      "audio1.mp3",
+      "audio1.mp3",
+      "audio2.mp3",
+      "audio2.mp3",
+      "audio3.mp3",
+      "audio3.mp3",
+    ];
+    cy.get("[data-test='playlist']>li").then((elements) => {
+      const actualPlaylist = [...elements].map((li) => li.innerText.trim());
+      expect(actualPlaylist).to.deep.equal(initialPlaylist);
+    });
+
+    const shuffle = cy.get("[data-test='shuffle']");
+    shuffle.click();
+    cy.get("[data-test='playlist']>li").then((elements) => {
+      const actualPlaylist = [...elements].map((li) => li.innerText.trim());
+      // if shuffle returns elements in the same order as before, try again;
+      // shouldn't collide very often with 6 files
+      while (
+        actualPlaylist.every((value, index) => value === initialPlaylist[index])
+      ) {
+        shuffle.click();
+      }
+      expect(actualPlaylist).to.not.deep.equal(initialPlaylist);
+    });
+  });
+
+  it("clears the playlist when the trash button is clicked", () => {
+    cy.visit("http://localhost:5173/");
+    cy.get("[data-test='fileInput']").selectFile(
+      [
+        "cypress/fixtures/audio3.mp3",
+        "cypress/fixtures/audio2.mp3",
+        "cypress/fixtures/audio1.mp3",
+      ],
+      { force: true },
+    );
+
+    // same behavior as previous test, in case that test changes
+    const expectedPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
+    cy.get("[data-test='playlist']>li").then((elements) => {
+      const actualPlaylist = [...elements].map((li) => li.innerText.trim());
+      expect(actualPlaylist).to.deep.equal(expectedPlaylist);
+    });
+
+    cy.get("[data-test='trash']").click();
     cy.get("[data-test='playlist']").should("not.exist");
   });
 });
