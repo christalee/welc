@@ -27,4 +27,4 @@ TODO
 - WONTFIX write component tests
 - DONE merge? mixin? stylesheets for inputs
 - responsive design testing
-- write tests for sort/shuffle/clear playlist buttons
+- DONE write tests for sort/shuffle/clear playlist buttons
