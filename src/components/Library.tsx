@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
 type LibraryData = {
-  library: string;
+  files: string[];
 };
 
 function Library({ libraryPath }: { libraryPath: string }) {
   const [libraryData, setLibraryData] = useState<LibraryData>({
-    library: libraryPath,
+    files: [],
   });
   useEffect(() => {
     fetch("/api/library", {
@@ -22,7 +22,15 @@ function Library({ libraryPath }: { libraryPath: string }) {
       .then((data) => setLibraryData(data));
   }, [libraryPath]);
 
-  return libraryData && <p>{libraryData.library}</p>;
+  return (
+    libraryData && (
+      <ul>
+        {libraryData.files.map((file) => (
+          <li key={file}>{decodeURI(file)}</li>
+        ))}
+      </ul>
+    )
+  );
 }
 
 export default Library;
