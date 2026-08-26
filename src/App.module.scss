@@ -1,10 +1,10 @@
-#center {
+.center {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 18px;
   place-content: center;
   place-items: center;
-  flex-grow: 1;
+  /* flex-grow: 1; */
 
   @media (max-width: 1024px) {
     padding: 32px 20px 24px;
@@ -12,13 +12,24 @@
   }
 }
 
-#center ul {
+.center ul,
+.tabbed ul {
   text-align: left;
 }
 
-#spacer {
+.tabbed {
+  padding: 24px 36px;
+}
+
+.tabbedContainer {
+  border: 1px solid var(--border);
+  padding-top: 18px;
+}
+
+.footer {
   height: 88px;
   border-top: 1px solid var(--border);
+  padding-top: 9px;
   @media (max-width: 1024px) {
     height: 48px;
   }
@@ -27,6 +38,8 @@
 .inputs {
   display: flex;
   gap: 24px;
+  justify-content: center;
+  margin-bottom: 18px;
 }
 
 .ticks {
@@ -35,7 +48,7 @@
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -4.5px;
     border: 5px solid transparent;

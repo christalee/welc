@@ -1,3 +1,5 @@
+import styles from "./libraryPath.module.scss";
+
 function LibraryPath({
   libraryPath,
   setLibraryPath,
@@ -6,13 +8,15 @@ function LibraryPath({
   setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
-    <>
-      <input
+    <div className={styles.libraryPath}>
+      <label>
+        Music Library Path:{" "}
+        <input
         type="text"
         value={libraryPath}
         onChange={(e) => setLibraryPath(e.target.value)}
-      />
-    </>
+      /></label>
+    </div>
   );
 }
 

@@ -8,11 +8,11 @@ import FileInput from "./components/FileInput";
 import Playlist from "./components/Playlist";
 import DirectoryInput from "./components/DirectoryInput";
 import Tabs from "./components/Tabs";
-import LibraryPath from './components/LibraryPath';
-import Library from './components/Library';
+import LibraryPath from "./components/LibraryPath";
+import Library from "./components/Library";
 import { sortByNameAsc, sortByNameDesc } from "./utils";
 
-import "./App.css";
+import styles from "./App.module.scss";
 
 function App() {
   const [files, setFiles] = useState<File[]>([]);
@@ -108,45 +108,45 @@ function App() {
 
   return (
     <>
-      <section className="center">
+      <section className={styles.center}>
         <h1>WeLC</h1>
         {metadata && <Metadata metadata={metadata} />}
         {files.length > 0 && (
           <Player playing={playing} handleEndOfFile={handleEndOfFile} />
         )}
       </section>
-      <section className="tabbed">
+      <section className={styles.tabbed}>
         <Tabs setTab={setTab} />
-        {tab === "playlist" && (
-          <>
-            <div className="inputs">
-              <DirectoryInput handleDirectoryInput={handleDirectoryInput} />
-              <FileInput handleFileInput={handleFileInput} />
-            </div>
-            <Playlist
-              files={files}
-              handleSortAsc={handleSortAsc}
-              handleSortDesc={handleSortDesc}
-              handleShuffle={handleShuffle}
-              handleEmptyPlaylist={handleEmptyPlaylist}
-              handleFileNameClick={handleFileNameClick}
-            />
-          </>
-        )}
-        {tab === "library" && (
-          <>
-            <div className="libraryPath">
+        <div className={styles.tabbedContainer}>
+          {tab === "playlist" && (
+            <>
+              <div className={styles.inputs}>
+                <DirectoryInput handleDirectoryInput={handleDirectoryInput} />
+                <FileInput handleFileInput={handleFileInput} />
+              </div>
+              <Playlist
+                files={files}
+                handleSortAsc={handleSortAsc}
+                handleSortDesc={handleSortDesc}
+                handleShuffle={handleShuffle}
+                handleEmptyPlaylist={handleEmptyPlaylist}
+                handleFileNameClick={handleFileNameClick}
+              />
+            </>
+          )}
+          {tab === "library" && (
+            <>
               <LibraryPath
                 libraryPath={libraryPath}
                 setLibraryPath={setLibraryPath}
               />
-            </div>
-            <Library libraryPath={libraryPath} />
-          </>
-        )}
+              <Library libraryPath={libraryPath} />
+            </>
+          )}
+        </div>
       </section>
-      <div className="ticks"></div>
-      <section className="footer">
+      <div className={styles.ticks}></div>
+      <section className={styles.footer}>
         Made with 💙 by <a href="https://github.com/christalee">christalee</a>
       </section>
     </>
