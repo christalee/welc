@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "e2e": "cypress run --browser chrome",
-    "api": "cd api && venv/bin/flask run --no-debugger -p 5172"
+    "api": "cd api && .venv/bin/flask run --debug --no-debugger -p 5172"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",

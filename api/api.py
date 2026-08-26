@@ -1,8 +1,8 @@
-import time
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
-@app.route('/api/time')
-def get_current_time():
-  return {'time': time.time()}
+
+@app.route('/api/library', methods=["POST"])
+def get_library():
+  return {'library': request.get_json()['library']}
