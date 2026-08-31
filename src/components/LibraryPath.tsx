@@ -1,14 +1,20 @@
+import { getLibrary } from "../utils";
+
+import type { LibraryData } from "../utils";
+
 import styles from "./libraryPath.module.scss";
 
 function LibraryPath({
   libraryPath,
   setLibraryPath,
+  setLibraryData
 }: {
   libraryPath: string;
   setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
+  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData>>;
 }) {
-  const handleLibraryScan = () => {
-    fetch("/api/scan_library", {
+  async function handleLibraryScan() {
+    await fetch("/api/scan_library", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -17,10 +23,11 @@ function LibraryPath({
         library: libraryPath,
       }),
     })
+    await getLibrary({ libraryPath, setLibraryData });
   }
 
-  const handleLibraryDelete = () => {
-    fetch("/api/delete_library", {
+  async function handleLibraryDelete() {
+    await fetch("/api/delete_library", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -29,6 +36,7 @@ function LibraryPath({
         library: libraryPath,
       }),
     })
+    await getLibrary({ libraryPath, setLibraryData });
   }
 
   return (

@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { getLibrary } from "../utils";
 
-type LibraryData = {
-  files: string[];
-};
+import type { LibraryData } from "../utils";
 
-function Library({ libraryPath }: { libraryPath: string }) {
-  const [libraryData, setLibraryData] = useState<LibraryData>({
-    files: [],
-  });
+function Library({
+  libraryPath,
+  libraryData,
+  setLibraryData,
+}: {
+  libraryPath: string;
+  libraryData: LibraryData;
+  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData>>;
+}) {
   useEffect(() => {
-    fetch("/api/library", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        library: libraryPath,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => setLibraryData(data));
-  }, [libraryPath]);
+    async function checkLibrary() {
+      if (libraryPath.length > 0) {
+        await getLibrary({ libraryPath, setLibraryData });
+      }
+    }
+    checkLibrary();
+  }, [libraryPath, setLibraryData]);
 
   return (
     libraryData && (

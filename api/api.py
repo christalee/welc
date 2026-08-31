@@ -19,7 +19,6 @@ def get_library():
 def get_library_from_db(path):
     query = db.select(Music.filepath).where(Music.filepath.like(f"{path}%"))
     rows = db.session.execute(query).scalars().all()
-    print("rows", rows)
     return rows
 
 

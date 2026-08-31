@@ -11,17 +11,21 @@ import Tabs from "./components/Tabs";
 import LibraryPath from "./components/LibraryPath";
 import Library from "./components/Library";
 import { sortByNameAsc, sortByNameDesc } from "./utils";
+import type { LibraryData } from "./utils";
 
 import styles from "./App.module.scss";
 
 function App() {
   const [files, setFiles] = useState<File[]>([]);
-  const [playing, setPlaying] = useState("");
+  const [playing, setPlaying] = useState<string>("");
   const [metadata, setMetadata] = useState<IAudioMetadata | undefined>(
     undefined,
   );
-  const [tab, setTab] = useState("playlist");
-  const [libraryPath, setLibraryPath] = useState("");
+  const [tab, setTab] = useState<string>("playlist");
+  const [libraryPath, setLibraryPath] = useState<string>("");
+  const [libraryData, setLibraryData] = useState<LibraryData>({
+    files: [],
+  });
 
   async function playFile(filesArray: File[], index: number) {
     const file = filesArray[index];
@@ -139,8 +143,13 @@ function App() {
               <LibraryPath
                 libraryPath={libraryPath}
                 setLibraryPath={setLibraryPath}
+                setLibraryData={setLibraryData}
               />
-              <Library libraryPath={libraryPath} />
+              <Library
+                libraryPath={libraryPath}
+                libraryData={libraryData}
+                setLibraryData={setLibraryData}
+              />
             </>
           )}
         </div>
