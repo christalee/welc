@@ -1,11 +1,15 @@
 import os
+from typing import Any
 from flask import Flask
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.types import JSON
+from sqlalchemy.orm import DeclarativeBase, registry
 from flask_sqlalchemy import SQLAlchemy
+
+mapper_registry = registry(type_annotation_map={dict[str, Any]: JSON})
 
 
 class Base(DeclarativeBase):
-    pass
+    registry = mapper_registry
 
 
 db = SQLAlchemy(model_class=Base)
@@ -15,9 +19,3 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
     f"postgresql+psycopg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@localhost/welc"
 )
 db.init_app(app)
-
-from models import Music
-from api import *
-
-with app.app_context():
-  db.create_all()
