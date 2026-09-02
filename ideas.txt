@@ -28,3 +28,27 @@ TODO
 - DONE merge? mixin? stylesheets for inputs
 - responsive design testing
 - DONE write tests for sort/shuffle/clear playlist buttons
+
+Media Library Design:
+- DONE user switches to media library tab ?? (should also be a History tab)
+- User picks a directory (repurpose existing directory picker?) or types a filepath
+- DONE user clicks Scan button
+- DONE POST directory path to /api/media-location
+* how to return results incrementally? indicate background processes to the user? polling?
+- DONE server-side, scan this directory path recursively for files
+- store each file in the files table (filter for audio files), with schema:
+  - path: string (full path, formed from input directory + sub path)
+  - filename: string
+  - metadata: dict/JSON?
+    - title: string
+    - artist: string
+    - album: string
+    - year: date?
+    - track #: int
+    - length: time?
+    - genre: string
+* first search the DB for a matching record and only create a new one if it's not found (compare on path/filename, not metadata)
+- display the directory to the user with a disclosure button and a clear button. When disclosure is clicked, display results from GET /api/media-location?{path} that match that path (display filename as title if metadata is empty, else show metadata). When clear button is clicked, request DELETE /api/media-location?{path} all records matching that path
+* again, this might take some time - how to indicate that to the user? or does the user even care, just remove the directory entry from the interface?
+- should also have a Clear All button that just resets the whole DB
+- files in the media library should be enqueueable: checkboxes plus an Add to Playlist (Play?) button
