@@ -1,8 +1,10 @@
 from flask import request
+from tinytag import TinyTag
 from pathlib import Path
+from sqlalchemy.engine import Row
+
 from app import app, db
 from models import Music
-
 
 AUDIO_EXTENSIONS = ["*.mp3", "*.ogg", "*.flac", "*.wav", "*.m4a"]
 
@@ -17,24 +19,43 @@ def get_library():
 
 
 def get_library_from_db(path):
-    query = db.select(Music.filepath).where(Music.filepath.like(f"{path}%"))
-    rows = db.session.execute(query).scalars().all()
+    query = db.select(Music.filepath, Music.metadata_json).where(
+        Music.filepath.like(f"{path}%")
+    )
+    rows = list(map(Row._asdict, db.session.execute(query).all()))
     return rows
 
 
 @app.route("/api/scan_library", methods=["POST"])
 def scan_library():
     libraryPath = request.get_json()["library"]
+    print(libraryPath)
     p = Path(libraryPath)
     matched = [
         f for f in p.rglob("*") if any([f.match(ext) for ext in AUDIO_EXTENSIONS])
     ]
-    files = list(map(Path.as_uri, matched))
-
+    files = []
+    for file in matched:
+        metadata = TinyTag.get(file)
+        data = {
+            "filepath": Path.as_uri(file),
+            "metadata_json": {
+                "title": metadata.title,
+                "artist": metadata.artist,
+                "album": metadata.album,
+                "year": metadata.year,
+                "track": metadata.track,
+                "length": metadata.duration,
+                "genre": metadata.genre,
+            },
+        }
+        files.append(data)
+    print(files[0])
     query = db.insert(Music)
-    db.session.execute(query, [
-        {'filepath': f} for f in files
-    ],)
+    db.session.execute(
+        query,
+        files,
+    )
     db.session.commit()
 
     return {"scanned": len(files)}

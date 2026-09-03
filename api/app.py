@@ -19,3 +19,5 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
     f"postgresql+psycopg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@localhost/welc"
 )
 db.init_app(app)
+
+from api import *

@@ -16,8 +16,21 @@ export const sortByNameDesc = (a: File, b: File) => {
   return 0;
 };
 
+type FileData = {
+  filepath: string;
+  metadata_json: {
+    title: string;
+    artist: string;
+    album: string;
+    year: string;
+    track: number;
+    length: number;
+    genre: string;
+  }
+}
+
 export type LibraryData = {
-  files: string[];
+  files: FileData[];
 };
 
 export async function getLibrary({

@@ -25,7 +25,7 @@ function Library({
     libraryData && (
       <ul>
         {libraryData.files.map((file) => (
-          <li key={file}>{decodeURI(file)}</li>
+          <li key={file.filepath}>{decodeURI(file.filepath)}</li>
         ))}
       </ul>
     )
