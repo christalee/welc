@@ -45,11 +45,12 @@ function LibraryPath({
         Music Library Path:{" "}
         <input
         type="text"
+        data-test="libraryPathField"
         value={libraryPath}
         onChange={(e) => setLibraryPath(e.target.value)}
       /></label>
-      <button onClick={handleLibraryScan}>Re/Scan</button>
-      <button onClick={handleLibraryDelete}>Clear</button>
+      <button data-test="scanLibrary" onClick={handleLibraryScan}>Re/Scan</button>
+      <button data-test="clearLibrary" onClick={handleLibraryDelete}>Clear</button>
     </div>
   );
 }

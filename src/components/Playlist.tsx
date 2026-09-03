@@ -52,7 +52,7 @@ function Playlist({
           data-test="trash"
         />
       </div>
-      <ul data-test="playlist" className={styles.playlist}>
+      <ul data-test="playlistFiles" className={styles.playlist}>
         {files.map((file, index) => (
           <li
             key={`${file.name}-${index}`}

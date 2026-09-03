@@ -23,7 +23,7 @@ function Library({
 
   return (
     libraryData && (
-      <ul>
+      <ul data-test="libraryData">
         {libraryData.files.map((file) => (
           <li key={file.filepath}>{decodeURI(file.filepath)}</li>
         ))}

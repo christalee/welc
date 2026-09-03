@@ -22,6 +22,7 @@ function Tabs({
         return (
           <div
             key={tab.value}
+            data-test={tab.value}
             className={styles.tab}
             onClick={() => setTab(tab.value)}
           >

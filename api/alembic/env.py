@@ -19,17 +19,23 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 from app import Base
 from models import Music
+
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-
-config.set_main_option(
-    "sqlalchemy.url",
-    f"postgresql+psycopg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@localhost/welc",
-)
+if config.config_ini_section == "test":
+    config.set_main_option(
+        "sqlalchemy.url",
+        f"postgresql+psycopg://welc_test:test_pw@localhost/welc_test",
+    )
+else:
+    config.set_main_option(
+        "sqlalchemy.url",
+        f"postgresql+psycopg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@localhost/welc",
+    )
 
 
 def run_migrations_offline() -> None:

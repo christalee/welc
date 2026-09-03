@@ -29,7 +29,6 @@ def get_library_from_db(path):
 @app.route("/api/scan_library", methods=["POST"])
 def scan_library():
     libraryPath = request.get_json()["library"]
-    print(libraryPath)
     p = Path(libraryPath)
     matched = [
         f for f in p.rglob("*") if any([f.match(ext) for ext in AUDIO_EXTENSIONS])
@@ -50,7 +49,7 @@ def scan_library():
             },
         }
         files.append(data)
-    print(files[0])
+
     query = db.insert(Music)
     db.session.execute(
         query,
