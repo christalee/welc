@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "cypress": "cypress open",
     "e2e": "cypress run --browser chrome",
-    "api": "cd api && .venv/bin/flask run --debug --no-debugger -p 5172"
+    "api": "cd api && .venv/bin/flask run --debug --no-debugger -p 5172",
+    "api:test": "cd api && FLASK_ENV=testing .venv/bin/flask run -p 5172",
+    "ci": "start-server-and-test api:test http-get://127.0.0.1:5172 e2e"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
@@ -36,6 +38,7 @@
     "globals": "^17.6.0",
     "pg": "^8.23.0",
     "sass": "^1.100.0",
+    "start-server-and-test": "^3.0.12",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.12"

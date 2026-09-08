@@ -315,7 +315,7 @@ describe("WeLC", () => {
   describe("Library tab", () => {
     beforeEach(() => {
       // Clear table before testing
-      cy.task("queryDb", "TRUNCATE TABLE music;");
+      cy.task("queryDb", "TRUNCATE music;");
     });
 
     it("shows no files before the directory has been scanned", () => {
@@ -325,29 +325,34 @@ describe("WeLC", () => {
 
       cy.get("[data-test='libraryData']>li").should("not.exist");
 
-      const libraryPathField = cy.get("[data-test='libraryPathField']")
-      libraryPathField.type("/Users/christalee/Documents/software/projects/welc/cypress/fixtures")
+      const libraryPathField = cy.get("[data-test='libraryPathField']");
+      libraryPathField.type(
+        "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
+      );
 
       cy.get("[data-test='libraryData']>li").should("not.exist");
     });
 
-    it("shows files after the directory is scanned", () =>{
+    it("shows files after the directory is scanned", () => {
       cy.visit("http://localhost:5173/");
       const libraryTab = cy.get("[data-test='library']");
       libraryTab.click();
 
-      const libraryPathField = cy.get("[data-test='libraryPathField']")
-      libraryPathField.type("/Users/christalee/Documents/software/projects/welc/cypress/fixtures")
+      const libraryPathField = cy.get("[data-test='libraryPathField']");
+      libraryPathField.type(
+        "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
+      );
       cy.get("[data-test='libraryData']>li").should("not.exist");
 
-      const scanBtn = cy.get("[data-test='scanLibrary']")
+      const scanBtn = cy.get("[data-test='scanLibrary']");
       scanBtn.click();
+      cy.wait(1000);
 
       const expectedLibrary = [
         "file:///Users/christalee/Documents/software/projects/welc/cypress/fixtures/audio1.mp3",
         "file:///Users/christalee/Documents/software/projects/welc/cypress/fixtures/audio2.mp3",
         "file:///Users/christalee/Documents/software/projects/welc/cypress/fixtures/audio3.mp3",
-      ]
+      ];
       cy.get("[data-test='libraryData']>li").then((elements) => {
         const actualLibrary = [...elements].map((li) => li.innerText.trim());
         expect(actualLibrary).to.include.members(expectedLibrary);
@@ -358,18 +363,21 @@ describe("WeLC", () => {
       const libraryTab = cy.get("[data-test='library']");
       libraryTab.click();
 
-      const libraryPathField = cy.get("[data-test='libraryPathField']")
-      libraryPathField.type("/Users/christalee/Documents/software/projects/welc/cypress/fixtures");
+      const libraryPathField = cy.get("[data-test='libraryPathField']");
+      libraryPathField.type(
+        "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
+      );
       cy.get("[data-test='libraryData']>li").should("not.exist");
-      
+
       const scanBtn = cy.get("[data-test='scanLibrary']");
       scanBtn.click();
+      cy.wait(1000);
 
       const expectedLibrary = [
         "file:///Users/christalee/Documents/software/projects/welc/cypress/fixtures/audio1.mp3",
         "file:///Users/christalee/Documents/software/projects/welc/cypress/fixtures/audio2.mp3",
         "file:///Users/christalee/Documents/software/projects/welc/cypress/fixtures/audio3.mp3",
-      ]
+      ];
       cy.get("[data-test='libraryData']>li").then((elements) => {
         const actualLibrary = [...elements].map((li) => li.innerText.trim());
         expect(actualLibrary).to.include.members(expectedLibrary);
@@ -377,8 +385,9 @@ describe("WeLC", () => {
 
       const clearBtn = cy.get("[data-test='clearLibrary']");
       clearBtn.click();
+      cy.wait(1000);
 
       cy.get("[data-test='libraryData']>li").should("not.exist");
-    })
+    });
   });
 });

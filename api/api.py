@@ -9,6 +9,11 @@ from models import Music
 AUDIO_EXTENSIONS = ["*.mp3", "*.ogg", "*.flac", "*.wav", "*.m4a"]
 
 
+@app.route("/")
+def heartbeat():
+    return "it's alive!"
+
+
 @app.route("/api/library", methods=["POST"])
 def get_library():
     libraryPath = request.get_json()["library"]

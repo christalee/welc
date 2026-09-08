@@ -15,9 +15,15 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    f"postgresql+psycopg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@localhost/welc"
-)
+if os.environ.get("FLASK_ENV") == "testing":
+    app.config["SQLALCHEMY_DATABASE_URI"] = (
+        "postgresql+psycopg://welc_test:test_pw@localhost/welc_test"
+    )
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = (
+        f"postgresql+psycopg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@localhost/welc"
+    )
+
 db.init_app(app)
 
 from api import *

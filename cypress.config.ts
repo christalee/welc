@@ -1,22 +1,18 @@
 import { defineConfig } from "cypress";
 import { Client } from "pg";
 
-function queryTestDb(query, config) {
+async function queryTestDb(query: string, config: Cypress.PluginConfigOptions) {
   const client = new Client(config.env.db);
-
-  return new Promise((resolve, reject) => {
-    client
-      .connect()
-      .then(() => client.query(query))
-      .then((res) => {
-        client.end();
-        resolve(res.rows); // postgres returns rows object
-      })
-      .catch((err) => {
-        client.end();
-        reject(err);
-      });
-  });
+  await client.connect();
+  try {
+    const result = await client.query(query);
+    return result.rows;
+  } catch (err) {
+    console.error("Query failed: ", err);
+    throw err;
+  } finally {
+    await client.end();
+  }
 }
 
 export default defineConfig({
@@ -33,8 +29,8 @@ export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       on("task", {
-        queryDb: (query) => {
-          return queryTestDb(query, config);
+        async queryDb(query) {
+          return await queryTestDb(query, config);
         },
       });
     },

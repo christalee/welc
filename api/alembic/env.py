@@ -29,7 +29,7 @@ target_metadata = Base.metadata
 if config.config_ini_section == "test":
     config.set_main_option(
         "sqlalchemy.url",
-        f"postgresql+psycopg://welc_test:test_pw@localhost/welc_test",
+        "postgresql+psycopg://welc_test:test_pw@localhost/welc_test",
     )
 else:
     config.set_main_option(
