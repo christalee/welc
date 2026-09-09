@@ -5,10 +5,18 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+from dotenv import load_dotenv
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+# This section adds environment variables used to populate
+# the DB connection string later on, either for testing or dev
+if config.config_ini_section == "test":
+    load_dotenv("../.env.testing")
+else:
+    load_dotenv("../.env.development")
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -26,16 +34,10 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-if config.config_ini_section == "test":
-    config.set_main_option(
-        "sqlalchemy.url",
-        "postgresql+psycopg://welc_test:test_pw@localhost/welc_test",
-    )
-else:
-    config.set_main_option(
-        "sqlalchemy.url",
-        f"postgresql+psycopg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@localhost/welc",
-    )
+config.set_main_option(
+    "sqlalchemy.url",
+    f"postgresql+psycopg://{os.environ["DB_USERNAME"]}:{os.environ["DB_PASSWORD"]}@localhost/{os.environ["DB_NAME"]}",
+)
 
 
 def run_migrations_offline() -> None:

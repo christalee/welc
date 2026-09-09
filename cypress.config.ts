@@ -1,5 +1,8 @@
 import { defineConfig } from "cypress";
 import { Client } from "pg";
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.testing' });
 
 async function queryTestDb(query: string, config: Cypress.PluginConfigOptions) {
   const client = new Client(config.env.db);
@@ -20,10 +23,10 @@ export default defineConfig({
   env: {
     db: {
       host: "localhost",
-      user: "welc_test",
-      password: "test_pw",
-      database: "welc_test",
-      port: 5432,
+      user: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      port: process.env.DB_PORT,
     },
   },
   e2e: {

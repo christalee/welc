@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:test": "vite --mode testing --port 5174",
     "build": "tsc -b && vite build --base=./",
     "lint": "eslint .",
     "preview": "vite preview",
     "cypress": "cypress open",
     "e2e": "cypress run --browser chrome",
-    "api": "cd api && .venv/bin/flask run --debug --no-debugger -p 5172",
-    "api:test": "cd api && FLASK_ENV=testing .venv/bin/flask run -p 5172",
-    "ci": "start-server-and-test api:test http-get://127.0.0.1:5172 e2e"
+    "api": "cd api && .venv/bin/flask --env-file \"../.env.development\" run --debug --no-debugger -p 5172",
+    "api:test": "cd api && .venv/bin/flask --env-file \"../.env.testing\" run -p 5171",
+    "ci": "start-server-and-test api:test http-get://127.0.0.1:5171 dev:test http://localhost:5174 e2e"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
@@ -32,6 +33,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "cypress": "^15.16.0",
+    "dotenv": "^17.4.2",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",

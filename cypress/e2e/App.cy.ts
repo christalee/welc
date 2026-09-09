@@ -1,12 +1,12 @@
 describe("WeLC", () => {
   describe("Playlist tab", () => {
     it("displays a filepicker", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       cy.get("[data-test='fileInput']").should("exist");
     });
 
     it("allows the user to select a file and displays/plays the result", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       // Before you select a file, the audio element and playlist should not exist
       cy.get("[data-test='audio']").should("not.exist");
       cy.get("[data-test='playlistFiles']").should("not.exist");
@@ -38,7 +38,7 @@ describe("WeLC", () => {
     });
 
     it("allows the user to select multiple files and click on one to play it", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       cy.get("[data-test='fileInput']").selectFile(
         [
           "cypress/fixtures/audio1.mp3",
@@ -78,7 +78,7 @@ describe("WeLC", () => {
     });
 
     it("sorts input by filename on upload", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       cy.get("[data-test='fileInput']").selectFile(
         [
           "cypress/fixtures/audio3.mp3",
@@ -97,7 +97,7 @@ describe("WeLC", () => {
     });
 
     it("appends subsequently selected files to the end of the playlist", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       cy.get("[data-test='fileInput']").selectFile(
         "cypress/fixtures/audio1.mp3",
         { force: true },
@@ -124,7 +124,7 @@ describe("WeLC", () => {
 
     // SKIP cypress doesn't recognize the directory input functionality
     // it("allows the user to select a directory and play all the audio files in it", () => {
-    //   cy.visit("http://localhost:5173/");
+    //   cy.visit("http://localhost:5174/");
     //   cy.get("[data-test='directoryInput']").selectFile("cypress/fixtures");
     //   cy.wait(500);
 
@@ -138,7 +138,7 @@ describe("WeLC", () => {
     // });
 
     it("plays the next track after the first track is finished", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       cy.get("[data-test='fileInput']").selectFile(
         [
           "cypress/fixtures/audio1.mp3",
@@ -171,7 +171,7 @@ describe("WeLC", () => {
     });
 
     it("resets the app when the end of the last file is reached", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       cy.get("[data-test='fileInput']").selectFile(
         "cypress/fixtures/audio1.mp3",
         { force: true },
@@ -192,7 +192,7 @@ describe("WeLC", () => {
     });
 
     it("sorts the playlist in ascending order by default upon upload", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       cy.get("[data-test='fileInput']").selectFile(
         [
           "cypress/fixtures/audio3.mp3",
@@ -210,7 +210,7 @@ describe("WeLC", () => {
     });
 
     it("sorts the playlist in descending/ascending order when the sort buttons are clicked", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       cy.get("[data-test='fileInput']").selectFile(
         [
           "cypress/fixtures/audio3.mp3",
@@ -245,7 +245,7 @@ describe("WeLC", () => {
     });
 
     it("shuffles the playlist when the shuffle button is clicked", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       cy.get("[data-test='fileInput']").selectFile(
         [
           "cypress/fixtures/audio3.mp3",
@@ -290,7 +290,7 @@ describe("WeLC", () => {
     });
 
     it("clears the playlist when the trash button is clicked", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       cy.get("[data-test='fileInput']").selectFile(
         [
           "cypress/fixtures/audio3.mp3",
@@ -319,7 +319,7 @@ describe("WeLC", () => {
     });
 
     it("shows no files before the directory has been scanned", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       const libraryTab = cy.get("[data-test='library']");
       libraryTab.click();
 
@@ -334,7 +334,7 @@ describe("WeLC", () => {
     });
 
     it("shows files after the directory is scanned", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       const libraryTab = cy.get("[data-test='library']");
       libraryTab.click();
 
@@ -359,7 +359,7 @@ describe("WeLC", () => {
       });
     });
     it("shows no files after the directory has been scanned and cleared", () => {
-      cy.visit("http://localhost:5173/");
+      cy.visit("http://localhost:5174/");
       const libraryTab = cy.get("[data-test='library']");
       libraryTab.click();
 
