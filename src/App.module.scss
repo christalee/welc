@@ -21,11 +21,6 @@
   padding: 24px 36px;
 }
 
-.tabbedContainer {
-  border: 1px solid var(--border);
-  padding-top: 18px;
-}
-
 .footer {
   height: 88px;
   border-top: 1px solid var(--border);
@@ -33,13 +28,6 @@
   @media (max-width: 1024px) {
     height: 48px;
   }
-}
-
-.inputs {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  margin-bottom: 18px;
 }
 
 .ticks {

@@ -320,7 +320,7 @@ describe("WeLC", () => {
 
     it("shows no files before the directory has been scanned", () => {
       cy.visit("http://localhost:5174/");
-      const libraryTab = cy.get("[data-test='library']");
+      const libraryTab = cy.get("[data-test='libraryTab']");
       libraryTab.click();
 
       cy.get("[data-test='libraryData']>li").should("not.exist");
@@ -335,7 +335,7 @@ describe("WeLC", () => {
 
     it("shows files after the directory is scanned", () => {
       cy.visit("http://localhost:5174/");
-      const libraryTab = cy.get("[data-test='library']");
+      const libraryTab = cy.get("[data-test='libraryTab']");
       libraryTab.click();
 
       const libraryPathField = cy.get("[data-test='libraryPathField']");
@@ -360,7 +360,7 @@ describe("WeLC", () => {
     });
     it("shows no files after the directory has been scanned and cleared", () => {
       cy.visit("http://localhost:5174/");
-      const libraryTab = cy.get("[data-test='library']");
+      const libraryTab = cy.get("[data-test='libraryTab']");
       libraryTab.click();
 
       const libraryPathField = cy.get("[data-test='libraryPathField']");

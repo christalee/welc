@@ -4,13 +4,9 @@ import { shuffle } from "lodash";
 
 import Metadata from "./components/Metadata";
 import Player from "./components/Player";
-import FileInput from "./components/FileInput";
-import Playlist from "./components/Playlist";
-import DirectoryInput from "./components/DirectoryInput";
-import Tabs from "./components/Tabs";
-import LibraryPath from "./components/LibraryPath";
-import Library from "./components/Library";
+import TabbedContainer from "./components/TabbedContainer";
 import { sortByNameAsc, sortByNameDesc } from "./utils";
+
 import type { LibraryData } from "./utils";
 
 import styles from "./App.module.scss";
@@ -21,7 +17,6 @@ function App() {
   const [metadata, setMetadata] = useState<IAudioMetadata | undefined>(
     undefined,
   );
-  const [tab, setTab] = useState<string>("playlist");
   const [libraryPath, setLibraryPath] = useState<string>("");
   const [libraryData, setLibraryData] = useState<LibraryData>({
     files: [],
@@ -120,39 +115,20 @@ function App() {
         )}
       </section>
       <section className={styles.tabbed}>
-        <Tabs setTab={setTab} />
-        <div className={styles.tabbedContainer}>
-          {tab === "playlist" && (
-            <>
-              <div className={styles.inputs}>
-                <DirectoryInput handleDirectoryInput={handleDirectoryInput} />
-                <FileInput handleFileInput={handleFileInput} />
-              </div>
-              <Playlist
-                files={files}
-                handleSortAsc={handleSortAsc}
-                handleSortDesc={handleSortDesc}
-                handleShuffle={handleShuffle}
-                handleEmptyPlaylist={handleEmptyPlaylist}
-                handleFileNameClick={handleFileNameClick}
-              />
-            </>
-          )}
-          {tab === "library" && (
-            <>
-              <LibraryPath
-                libraryPath={libraryPath}
-                setLibraryPath={setLibraryPath}
-                setLibraryData={setLibraryData}
-              />
-              <Library
-                libraryPath={libraryPath}
-                libraryData={libraryData}
-                setLibraryData={setLibraryData}
-              />
-            </>
-          )}
-        </div>
+        <TabbedContainer
+          handleDirectoryInput={handleDirectoryInput}
+          handleFileInput={handleFileInput}
+          files={files}
+          handleSortAsc={handleSortAsc}
+          handleSortDesc={handleSortDesc}
+          handleShuffle={handleShuffle}
+          handleEmptyPlaylist={handleEmptyPlaylist}
+          handleFileNameClick={handleFileNameClick}
+          libraryPath={libraryPath}
+          setLibraryPath={setLibraryPath}
+          libraryData={libraryData}
+          setLibraryData={setLibraryData}
+        />
       </section>
       <div className={styles.ticks}></div>
       <section className={styles.footer}>
