@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Tabs, TabList, Tab, TabPanels, TabPanel, SelectionIndicator } from "react-aria-components";
 
 import DirectoryInput from "./DirectoryInput";
@@ -90,10 +91,6 @@ function TabbedContainer({
   handleShuffle,
   handleEmptyPlaylist,
   handleFileNameClick,
-  libraryPath,
-  setLibraryPath,
-  libraryData,
-  setLibraryData,
 }: {
   handleDirectoryInput: (
     e: React.ChangeEvent<HTMLInputElement, Element>,
@@ -107,11 +104,12 @@ function TabbedContainer({
   handleShuffle: () => Promise<void>;
   handleEmptyPlaylist: () => void;
   handleFileNameClick: (index: number) => Promise<void>;
-  libraryPath: string;
-  setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
-  libraryData: LibraryData;
-  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData>>;
 }) {
+  const [libraryPath, setLibraryPath] = useState<string>("");
+  const [libraryData, setLibraryData] = useState<LibraryData>({
+    files: [],
+  });
+
   const tabs = hydrateTabs({
     handleDirectoryInput,
     handleFileInput,

@@ -7,8 +7,6 @@ import Player from "./components/Player";
 import TabbedContainer from "./components/TabbedContainer";
 import { sortByNameAsc, sortByNameDesc } from "./utils";
 
-import type { LibraryData } from "./utils";
-
 import styles from "./App.module.scss";
 
 function App() {
@@ -17,10 +15,6 @@ function App() {
   const [metadata, setMetadata] = useState<IAudioMetadata | undefined>(
     undefined,
   );
-  const [libraryPath, setLibraryPath] = useState<string>("");
-  const [libraryData, setLibraryData] = useState<LibraryData>({
-    files: [],
-  });
 
   async function playFile(filesArray: File[], index: number) {
     const file = filesArray[index];
@@ -48,13 +42,6 @@ function App() {
 
   async function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
-      const filesArray: File[] = Array.from(e.target.files).sort(sortByNameAsc);
-      await startPlaying(filesArray);
-    }
-  }
-
-  async function handleDirectoryInput(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files && e.target.files.length > 0) {
       const filesArray: File[] = Array.from(e.target.files)
         .filter((file) => file.type.includes("audio"))
         .sort(sortByNameAsc);
@@ -65,19 +52,11 @@ function App() {
   async function handleEndOfFile() {
     if (files.length > 1) {
       // don't run at the end of the last file, when files.length is 1
-
       await switchPlaying(1);
     } else {
       // clean up
-      window.URL.revokeObjectURL(playing);
-      setPlaying("");
-      setMetadata(undefined);
-      setFiles([]);
+      handleEmptyPlaylist();
     }
-  }
-
-  async function handleFileNameClick(index: number) {
-    await switchPlaying(index);
   }
 
   async function handleSortAsc() {
@@ -116,18 +95,14 @@ function App() {
       </section>
       <section className={styles.tabbed}>
         <TabbedContainer
-          handleDirectoryInput={handleDirectoryInput}
+          handleDirectoryInput={handleFileInput}
           handleFileInput={handleFileInput}
           files={files}
           handleSortAsc={handleSortAsc}
           handleSortDesc={handleSortDesc}
           handleShuffle={handleShuffle}
           handleEmptyPlaylist={handleEmptyPlaylist}
-          handleFileNameClick={handleFileNameClick}
-          libraryPath={libraryPath}
-          setLibraryPath={setLibraryPath}
-          libraryData={libraryData}
-          setLibraryData={setLibraryData}
+          handleFileNameClick={switchPlaying}
         />
       </section>
       <div className={styles.ticks}></div>
