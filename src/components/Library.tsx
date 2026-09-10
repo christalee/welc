@@ -1,7 +1,5 @@
 import { useEffect } from "react";
-import { getLibrary } from "../utils";
-
-import type { LibraryData } from "../utils";
+import { getLibrary, type LibraryData } from "../utils";
 
 function Library({
   libraryPath,

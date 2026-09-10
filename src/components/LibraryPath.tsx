@@ -1,6 +1,4 @@
-import { getLibrary } from "../utils";
-
-import type { LibraryData } from "../utils";
+import { getLibrary, type LibraryData } from "../utils";
 
 import styles from "./libraryPath.module.scss";
 
