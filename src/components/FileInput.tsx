@@ -9,7 +9,7 @@ function FileInput({
 }) {
   return (
     <>
-      <label htmlFor="files">Select Files</label>
+      <label htmlFor="files" className={styles.label}>Select Files</label>
       <input
         type="file"
         id="files"

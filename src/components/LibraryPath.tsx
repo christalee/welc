@@ -39,7 +39,7 @@ function LibraryPath({
 
   return (
     <div className={styles.libraryPath}>
-      <label>
+      <label className={styles.label}>
         Music Library Path:{" "}
         <input
         type="text"

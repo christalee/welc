@@ -1,3 +1,9 @@
-.libraryPath label {
+.libraryPath {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.label {
   border: 0px;
 }
