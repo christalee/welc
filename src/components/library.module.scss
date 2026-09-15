@@ -1,0 +1,68 @@
+.tableContainer {
+  width: 100%;
+  overflow: auto;
+}
+
+.table {
+  text-align: left;
+}
+
+.columnHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkboxField {
+  height: 14px;
+  width: 14px;
+  border: 1px solid var(--accent-border);
+  border-radius: 4px;
+}
+
+.resizer {
+  width: 2px;
+  height: 18px;
+  background-color: var(--accent-border);
+  margin-right: 8px;
+  
+  &[data-resizable-direction='both'] {
+    cursor: ew-resize;
+  }
+
+  &[data-resizable-direction='left'] {
+    cursor: e-resize;
+  }
+
+  &[data-resizable-direction='right'] {
+    cursor: w-resize;
+  }
+}
+
+.expandableCell {
+  --chevron-placeholder: 20px;
+    padding-inline-start: calc(
+      8px + (var(--table-row-level) - 1) * 16px +
+        var(--chevron-placeholder)
+    );
+
+    &[data-has-child-items] {
+      --chevron-placeholder: 0px;
+    }
+}
+
+.expander {
+  all: unset;
+  vertical-align: middle;
+  margin-inline-end: 4px;
+  
+  svg {
+    transition: rotate 200ms;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+&[data-expanded] .expander svg {
+  rotate: 90deg;
+}

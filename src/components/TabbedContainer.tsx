@@ -1,5 +1,12 @@
-import { useState } from 'react';
-import { Tabs, TabList, Tab, TabPanels, TabPanel, SelectionIndicator } from "react-aria-components";
+import { useState } from "react";
+import {
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  SelectionIndicator,
+} from "react-aria-components";
 
 import DirectoryInput from "./DirectoryInput";
 import FileInput from "./FileInput";
@@ -39,8 +46,8 @@ const hydrateTabs = ({
   handleFileNameClick: (index: number) => Promise<void>;
   libraryPath: string;
   setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
-  libraryData: LibraryData;
-  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData>>;
+  libraryData: LibraryData | undefined;
+  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData | undefined>>;
 }) => {
   return [
     {
@@ -106,9 +113,9 @@ function TabbedContainer({
   handleFileNameClick: (index: number) => Promise<void>;
 }) {
   const [libraryPath, setLibraryPath] = useState<string>("");
-  const [libraryData, setLibraryData] = useState<LibraryData>({
-    files: [],
-  });
+  const [libraryData, setLibraryData] = useState<LibraryData | undefined>(
+    undefined,
+  );
 
   const tabs = hydrateTabs({
     handleDirectoryInput,
@@ -124,6 +131,7 @@ function TabbedContainer({
     libraryData,
     setLibraryData,
   });
+
   return (
     <Tabs>
       <TabList className={styles.container}>

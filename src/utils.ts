@@ -16,9 +16,10 @@ export const sortByNameDesc = (a: File, b: File) => {
   return 0;
 };
 
-type FileData = {
+export type LibraryData = {
+  name: string;
   filepath: string;
-  metadata_json: {
+  metadata: {
     title: string;
     artist: string;
     album: string;
@@ -26,11 +27,8 @@ type FileData = {
     track: number;
     length: number;
     genre: string;
-  }
-}
-
-export type LibraryData = {
-  files: FileData[];
+  };
+  children: LibraryData[];
 };
 
 export async function getLibrary({
@@ -38,7 +36,7 @@ export async function getLibrary({
   setLibraryData,
 }: {
   libraryPath: string;
-  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData>>;
+  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData | undefined>>;
 }) {
   await fetch("/api/library", {
     method: "POST",
@@ -51,4 +49,4 @@ export async function getLibrary({
   })
     .then((response) => response.json())
     .then((data) => setLibraryData(data));
-};
+}

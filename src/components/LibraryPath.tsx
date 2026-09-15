@@ -9,7 +9,7 @@ function LibraryPath({
 }: {
   libraryPath: string;
   setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
-  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData>>;
+  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData | undefined>>;
 }) {
   async function handleLibraryScan() {
     await fetch("/api/scan_library", {
@@ -34,7 +34,7 @@ function LibraryPath({
         library: libraryPath,
       }),
     })
-    await getLibrary({ libraryPath, setLibraryData });
+    setLibraryData(undefined);
   }
 
   return (
