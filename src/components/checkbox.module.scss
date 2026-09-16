@@ -1,0 +1,43 @@
+.checkboxButton {
+  display: flex;
+  /* This is needed so the HiddenInput is positioned correctly */
+  position: relative;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  forced-color-adjust: none;
+  -webkit-tap-highlight-color: transparent;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: none;
+    stroke-width: 3px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &[data-selected] {
+    svg {
+      stroke: var(--text);
+    }
+  }
+
+  &[data-indeterminate] {
+    svg {
+      fill: var(--text);
+    }
+  }
+}
+
+.indicator {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}

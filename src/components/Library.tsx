@@ -1,24 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
-  Column,
+  Column as AriaColumn,
+  type ColumnProps as AriaColumnProps,
+  Group,
   Row,
   TableBody,
   Cell,
-  CheckboxButton,
   ResizableTableContainer,
   Button,
   ColumnResizer,
-  CheckboxField,
   Collection,
+  type SortDescriptor,
+  type Selection,
 } from "react-aria-components";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronRight,
+  faChevronUp,
+  faChevronDown,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import Checkbox from "./Checkbox";
 import { getLibrary, type LibraryData } from "../utils";
 
 import styles from "./library.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const parseFilename = (filepath: string, libraryPath: string) => {
   const uri = decodeURI(filepath);
@@ -26,6 +33,40 @@ const parseFilename = (filepath: string, libraryPath: string) => {
   // add 1 to slice the trailing /
   return decodeURIComponent(url.pathname).slice(libraryPath.length + 1);
 };
+
+interface ColumnProps extends AriaColumnProps {
+  allowsResizing?: boolean;
+}
+
+function Column(
+  props: Omit<ColumnProps, "children"> & { children?: React.ReactNode },
+) {
+  return (
+    <AriaColumn {...props}>
+      {({ allowsSorting, sortDirection }) => (
+        <div className={styles.columnHeader}>
+          <Group
+            role="presentation"
+            tabIndex={-1}
+            className={styles.columnLabel}
+          >
+            {props.children}
+            {allowsSorting && (
+              <span aria-hidden="true" className={styles.sorter}>
+                {sortDirection === "ascending" ? (
+                  <FontAwesomeIcon icon={faChevronUp} />
+                ) : (
+                  <FontAwesomeIcon icon={faChevronDown} />
+                )}
+              </span>
+            )}
+          </Group>
+          {props.allowsResizing && <ColumnResizer className={styles.resizer} />}
+        </div>
+      )}
+    </AriaColumn>
+  );
+}
 
 function Library({
   libraryPath,
@@ -36,6 +77,25 @@ function Library({
   libraryData: LibraryData | undefined;
   setLibraryData: React.Dispatch<React.SetStateAction<LibraryData | undefined>>;
 }) {
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+    column: "name",
+    direction: "ascending",
+  });
+  const [selected, setSelected] = useState<Selection>(new Set());
+
+  let sortedLibrary = libraryData?.children;
+  if (sortDescriptor && libraryData) {
+    sortedLibrary = libraryData.children.sort((a, b) => {
+      const first = a[sortDescriptor.column];
+      const second = b[sortDescriptor.column];
+      let cmp = first < second ? -1 : 1;
+      if (sortDescriptor.direction === "descending") {
+        cmp = -cmp;
+      }
+      return cmp;
+    });
+  }
+
   useEffect(() => {
     async function checkLibrary() {
       if (libraryPath.length > 0) {
@@ -46,52 +106,51 @@ function Library({
   }, [libraryPath, setLibraryData]);
 
   return (
-    libraryData && (
+    sortedLibrary && (
       <ResizableTableContainer className={styles.tableContainer}>
         <Table
           data-test="libraryData"
           selectionMode="multiple"
-          treeColumn="filename"
+          treeColumn="name"
+          sortDescriptor={sortDescriptor}
+          onSortChange={setSortDescriptor}
+          selectedKeys={selected}
+          onSelectionChange={setSelected}
           aria-label="libraryData"
           className={styles.table}
-          style={{ width: "100%" }}
+          // style={{ width: "100%" }}
         >
           <TableHeader>
-            <Column id="checkbox" maxWidth={25}>
-              <CheckboxField slot="selection" className={styles.checkboxField}>
-                <CheckboxButton>{""}</CheckboxButton>
-              </CheckboxField>
+            <Column id="checkbox" width={25}>
+              <Checkbox slot="selection" className={styles.checkboxField}>
+                {""}
+              </Checkbox>
             </Column>
-            <Column id="filename" isRowHeader>
-              <div className={styles.columnHeader}>
-                Name <ColumnResizer className={styles.resizer} />
-              </div>
+            <Column id="name" isRowHeader allowsResizing allowsSorting>
+              Name
             </Column>
-            <Column id="artist">
-              <div className={styles.columnHeader}>
-                Artist <ColumnResizer className={styles.resizer} />
-              </div>
+            <Column id="artist" allowsResizing>
+              Artist
             </Column>
-            <Column id="album">
-              <div className={styles.columnHeader}>
-                Album <ColumnResizer className={styles.resizer} />
-              </div>
+            <Column id="album" allowsResizing>
+              Album
             </Column>
-            <Column id="year" maxWidth={60}>
+            <Column id="year" width={60}>
               Year
             </Column>
           </TableHeader>
-          <TableBody items={libraryData.children} dependencies={[libraryData]}>
+          <TableBody items={sortedLibrary} dependencies={[sortedLibrary]}>
             {function renderItem(item) {
               return (
-                <Row key={item.filepath} id={item.filepath}>
+                <Row
+                  key={item.filepath}
+                  id={item.filepath}
+                  className={styles.row}
+                >
                   <Cell>
-                    <CheckboxField
-                      slot="selection"
-                      className={styles.checkboxField}
-                    >
-                      <CheckboxButton>{""}</CheckboxButton>
-                    </CheckboxField>
+                    <Checkbox slot="selection" className={styles.checkboxField}>
+                      {""}
+                    </Checkbox>
                   </Cell>
                   <Cell className={styles.expandableCell}>
                     {item.children.length > 0 && (
@@ -104,15 +163,9 @@ function Library({
                       : parseFilename(item.filepath, libraryPath)}
                   </Cell>
                   <Cell>
-                    {item.metadata?.artist
-                      ? item.metadata.artist
-                      : "Unknown Artist"}
+                    {item.metadata?.artist ? item.metadata.artist : ""}
                   </Cell>
-                  <Cell>
-                    {item.metadata?.album
-                      ? item.metadata.album
-                      : "Unknown Album"}
-                  </Cell>
+                  <Cell>{item.metadata?.album ? item.metadata.album : ""}</Cell>
                   <Cell>{item.metadata?.year ? item.metadata.year : ""}</Cell>
                   <Collection items={item.children}>{renderItem}</Collection>
                 </Row>

@@ -13,56 +13,78 @@
   align-items: center;
 }
 
+.columnLabel {
+  margin-left: 8px;
+}
+
 .checkboxField {
   height: 14px;
   width: 14px;
-  border: 1px solid var(--accent-border);
+  border: 2px solid var(--accent);
   border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .resizer {
   width: 2px;
   height: 18px;
-  background-color: var(--accent-border);
-  margin-right: 8px;
-  
-  &[data-resizable-direction='both'] {
+  background-color: var(--accent);
+
+  &[data-resizable-direction="both"] {
     cursor: ew-resize;
   }
 
-  &[data-resizable-direction='left'] {
+  &[data-resizable-direction="left"] {
     cursor: e-resize;
   }
 
-  &[data-resizable-direction='right'] {
+  &[data-resizable-direction="right"] {
     cursor: w-resize;
   }
 }
 
 .expandableCell {
-  --chevron-placeholder: 20px;
-    padding-inline-start: calc(
-      8px + (var(--table-row-level) - 1) * 16px +
-        var(--chevron-placeholder)
-    );
+  --chevron-placeholder: 24px;
+  padding-inline-start: calc(
+    8px + (var(--table-row-level) - 1) * 16px + var(--chevron-placeholder)
+  );
 
-    &[data-has-child-items] {
-      --chevron-placeholder: 0px;
-    }
+  &[data-has-child-items] {
+    --chevron-placeholder: 0px;
+  }
 }
 
 .expander {
   all: unset;
-  vertical-align: middle;
-  margin-inline-end: 4px;
-  
+  vertical-align: baseline;
+  margin-inline-end: 8px;
+  color: var(--accent);
+
   svg {
     transition: rotate 200ms;
     width: 16px;
     height: 16px;
   }
+
+  [data-expanded] & svg {
+    rotate: 90deg;
+  }
 }
 
-&[data-expanded] .expander svg {
-  rotate: 90deg;
+.sorter {
+  margin-inline-start: 8px;
+  color: var(--accent);
+}
+
+.row {
+  &:nth-child(2n) {
+    background: var(--social-bg);
+  }
+
+  &[data-selected] {
+    background: var(--accent-border);
+    color: var(--bg);
+  }
 }
