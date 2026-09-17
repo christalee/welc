@@ -23,7 +23,13 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Checkbox from "./Checkbox";
-import { getLibrary, type LibraryData } from "../utils";
+import {
+  getLibrary,
+  type LibraryData,
+  useTreeHelpers,
+  cascadeDown,
+  cascadeUp,
+} from "../utils";
 
 import styles from "./library.module.scss";
 
@@ -96,6 +102,39 @@ function Library({
     });
   }
 
+  const { parentToChildren, childToParent, allIds } = useTreeHelpers(
+    libraryData?.children,
+  );
+
+  const handleSelectionChange = (selection: Selection) => {
+    if (selection === "all") {
+      setSelected(new Set(allIds));
+      return;
+    }
+
+    const nextSelected = new Set<string>(selection as Set<string>);
+    const currentSelected =
+      selected === "all" ? new Set(allIds) : (selected as Set<string>);
+
+    // Find what changed (added or removed)
+    const added = [...nextSelected].filter((x) => !currentSelected.has(x));
+    const removed = [...currentSelected].filter((x) => !nextSelected.has(x));
+
+    added.forEach((id) =>
+      cascadeDown(id, true, parentToChildren, nextSelected),
+    );
+    removed.forEach((id) =>
+      cascadeDown(id, false, parentToChildren, nextSelected),
+    );
+
+    // Run parent verification for all changes
+    [...added, ...removed].forEach((id) =>
+      cascadeUp(id, childToParent, parentToChildren, nextSelected),
+    );
+
+    setSelected(nextSelected);
+  };
+
   useEffect(() => {
     async function checkLibrary() {
       if (libraryPath.length > 0) {
@@ -115,7 +154,7 @@ function Library({
           sortDescriptor={sortDescriptor}
           onSortChange={setSortDescriptor}
           selectedKeys={selected}
-          onSelectionChange={setSelected}
+          onSelectionChange={handleSelectionChange}
           aria-label="libraryData"
           className={styles.table}
           // style={{ width: "100%" }}

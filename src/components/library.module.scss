@@ -5,6 +5,7 @@
 
 .table {
   text-align: left;
+  border-collapse: collapse;
 }
 
 .columnHeader {
@@ -86,5 +87,9 @@
   &[data-selected] {
     background: var(--accent-border);
     color: var(--bg);
+
+    &:nth-child(2n) {
+      background: var(--accent-row);
+    }
   }
 }

@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 export const sortByNameAsc = (a: File, b: File) => {
   if (a.name > b.name) {
     return 1;
@@ -50,3 +52,70 @@ export async function getLibrary({
     .then((response) => response.json())
     .then((data) => setLibraryData(data));
 }
+
+export function useTreeHelpers(data: LibraryData[] | undefined) {
+  return useMemo(() => {
+    const parentToChildren = new Map<string, string[]>();
+    const childToParent = new Map<string, string>();
+    const allIds: string[] = [];
+
+    const traverse = (items: LibraryData[]) => {
+      items.forEach((item) => {
+        allIds.push(item.filepath);
+        if (item.children && item.children.length > 0) {
+          const childIds = item.children.map((c) => c.filepath);
+          parentToChildren.set(item.filepath, childIds);
+          item.children.forEach((c) =>
+            childToParent.set(c.filepath, item.filepath),
+          );
+          traverse(item.children);
+        }
+      });
+    };
+
+    if (data) {
+      traverse(data);
+    }
+    return { parentToChildren, childToParent, allIds };
+  }, [data]);
+}
+
+// Cascade Downwards (Select/Deselect children)
+export const cascadeDown = (
+  id: string,
+  isSelecting: boolean,
+  parentToChildren: Map<string, string[]>,
+  nextSelected: Set<string>,
+) => {
+  const children = parentToChildren.get(id);
+  if (children) {
+    children.forEach((childId) => {
+      if (isSelecting) nextSelected.add(childId);
+      else nextSelected.delete(childId);
+      cascadeDown(childId, isSelecting, parentToChildren, nextSelected);
+    });
+  }
+};
+
+// Cascade Upwards (Update parent based on children state)
+export const cascadeUp = (
+  childId: string,
+  childToParent: Map<string, string>,
+  parentToChildren: Map<string, string[]>,
+  nextSelected: Set<string>,
+) => {
+  const parentId = childToParent.get(childId);
+  if (!parentId) return;
+
+  const siblings = parentToChildren.get(parentId) || [];
+  const allSiblingsSelected = siblings.every((sibId) =>
+    nextSelected.has(sibId),
+  );
+
+  if (allSiblingsSelected) {
+    nextSelected.add(parentId);
+  } else {
+    nextSelected.delete(parentId);
+  }
+  cascadeUp(parentId, childToParent, parentToChildren, nextSelected);
+};
