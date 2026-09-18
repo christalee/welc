@@ -157,10 +157,9 @@ function Library({
           onSelectionChange={handleSelectionChange}
           aria-label="libraryData"
           className={styles.table}
-          // style={{ width: "100%" }}
         >
           <TableHeader>
-            <Column id="checkbox" width={25}>
+            <Column id="checkbox" width={25} minWidth={25} maxWidth={25}>
               <Checkbox slot="selection" className={styles.checkboxField}>
                 {""}
               </Checkbox>
@@ -174,7 +173,7 @@ function Library({
             <Column id="album" allowsResizing>
               Album
             </Column>
-            <Column id="year" width={60}>
+            <Column id="year" width={60} minWidth={60} maxWidth={60}>
               Year
             </Column>
           </TableHeader>
