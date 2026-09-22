@@ -38,7 +38,7 @@ export async function getLibrary({
   setLibraryData,
 }: {
   libraryPath: string;
-  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData | undefined>>;
+  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData[] | undefined>>;
 }) {
   await fetch("/api/library", {
     method: "POST",

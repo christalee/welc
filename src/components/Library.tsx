@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   Table,
   TableHeader,
@@ -21,6 +21,7 @@ import {
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { debounce } from "lodash";
 
 import Checkbox from "./Checkbox";
 import {
@@ -80,8 +81,8 @@ function Library({
   setLibraryData,
 }: {
   libraryPath: string;
-  libraryData: LibraryData | undefined;
-  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData | undefined>>;
+  libraryData: LibraryData[] | undefined;
+  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData[] | undefined>>;
 }) {
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
@@ -89,9 +90,9 @@ function Library({
   });
   const [selected, setSelected] = useState<Selection>(new Set());
 
-  let sortedLibrary = libraryData?.children;
+  let sortedLibrary = libraryData;
   if (sortDescriptor && libraryData) {
-    sortedLibrary = libraryData.children.sort((a, b) => {
+    sortedLibrary = libraryData.sort((a, b) => {
       const first = a[sortDescriptor.column];
       const second = b[sortDescriptor.column];
       let cmp = first < second ? -1 : 1;
@@ -102,9 +103,8 @@ function Library({
     });
   }
 
-  const { parentToChildren, childToParent, allIds } = useTreeHelpers(
-    libraryData?.children,
-  );
+  const { parentToChildren, childToParent, allIds } =
+    useTreeHelpers(libraryData);
 
   const handleSelectionChange = (selection: Selection) => {
     if (selection === "all") {
@@ -135,14 +135,16 @@ function Library({
     setSelected(nextSelected);
   };
 
+  const debounceGetLibrary = useMemo(() => debounce(getLibrary, 250), []);
+
   useEffect(() => {
     async function checkLibrary() {
       if (libraryPath.length > 0) {
-        await getLibrary({ libraryPath, setLibraryData });
+        debounceGetLibrary({ libraryPath, setLibraryData });
       }
     }
     checkLibrary();
-  }, [libraryPath, setLibraryData]);
+  }, [libraryPath, setLibraryData, debounceGetLibrary]);
 
   return (
     sortedLibrary && (

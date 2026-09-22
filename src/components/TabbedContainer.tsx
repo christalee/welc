@@ -46,8 +46,8 @@ const hydrateTabs = ({
   handleFileNameClick: (index: number) => Promise<void>;
   libraryPath: string;
   setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
-  libraryData: LibraryData | undefined;
-  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData | undefined>>;
+  libraryData: LibraryData[] | undefined;
+  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData[] | undefined>>;
 }) => {
   return [
     {
@@ -113,7 +113,7 @@ function TabbedContainer({
   handleFileNameClick: (index: number) => Promise<void>;
 }) {
   const [libraryPath, setLibraryPath] = useState<string>("");
-  const [libraryData, setLibraryData] = useState<LibraryData | undefined>(
+  const [libraryData, setLibraryData] = useState<LibraryData[] | undefined>(
     undefined,
   );
 
