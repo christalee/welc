@@ -6,20 +6,18 @@ def format_node(name, child_dict, metadata_dict, prefix_uri=""):
     node = {
         "name": name,
         "filepath": filepath,
+        "metadata": {},
+        "children": []
     }
 
     if filepath in metadata_dict:
         node["metadata"] = metadata_dict[filepath]
-    else:
-        node["metadata"] = {}
 
     if child_dict:
         node["children"] = [
             format_node(k, v, metadata_dict, prefix_uri=filepath)
             for k, v in child_dict.items()
         ]
-    else:
-        node["children"] = []
 
     return node
 
@@ -37,7 +35,7 @@ def create_filetree_with_metadata(root_uri, rows):
             current = current.setdefault(part, {})
 
     results = [
-        format_node(k, v, metadata_dict, prefix_uri=root_uri) for k, v, in tree.items()
+        format_node(k, v, metadata_dict, prefix_uri=root_uri) for k, v in tree.items()
     ]
 
     return results

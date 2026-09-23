@@ -2,7 +2,7 @@
 
 A minimal audio player. As of 2026-06-05, it plays music selected from any mounted filesystem (including remote sources) via the system filepicker. Features include: displaying file metadata, sorting the playlist by name asc/desc, shuffling the playlist, clearing the playlist, skipping ahead in the playlist by clicking on a filename.
 
-Under development (2026-09-08): a media library, which takes a directory name as input and scans the filepaths and metadata into the DB.
+Under development (2026-09-08): a media library, which takes a directory name as input and scans the filepaths and metadata into the DB, then displays them in a table with checkboxes.
 
 ## How to run this project
 
@@ -36,5 +36,5 @@ DB_USERNAME=YOUR_TEST_USERNAME
 DB_PASSWORD=YOUR_TEST_PASSWORD
 ```
 3. Create the relevant tables (from inside the venv): `alembic --name test upgrade head`
-4. Run the Cypress tests headless: `npm run ci`
-5. Or run them in the browser: `npm run cypress`
+4. Run the frontend tests headless (`npm run ci`) or run them in the browser (`npm run cypress`)
+5. Run the backend tests: `cd api && source .venv/bin/activate && pytest`
