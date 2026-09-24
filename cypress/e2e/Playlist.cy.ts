@@ -1,11 +1,13 @@
 describe("Playlist tab", () => {
-  it("displays a filepicker", () => {
+  beforeEach(() => {
+    // Set the stage
     cy.visit("http://localhost:5174/");
+  })
+  it("displays a filepicker", () => {
     cy.get("[data-test='fileInput']").should("exist");
   });
 
   it("allows the user to select a file and displays/plays the result", () => {
-    cy.visit("http://localhost:5174/");
     // Before you select a file, the audio element and playlist should not exist
     cy.get("[data-test='audio']").should("not.exist");
     cy.get("[data-test='playlistFiles']").should("not.exist");
@@ -21,7 +23,7 @@ describe("Playlist tab", () => {
       .should("exist")
       .should("have.prop", "paused")
       .then((paused) => expect(paused).to.be.false);
-    cy.get("[data-test='playlistFiles']>li")
+    cy.get("[data-test='playlistFiles'] li")
       .contains("audio1.mp3")
       .should("exist");
     const expectedMetadata = [
@@ -30,14 +32,13 @@ describe("Playlist tab", () => {
       "Album: Dolor Sit Amet",
       "Track #: 1",
     ];
-    cy.get("[data-test='metadata']>li").then((elements) => {
+    cy.get("[data-test='metadata'] li").then((elements) => {
       const actualMetadata = [...elements].map((li) => li.innerText.trim());
       expect(actualMetadata).to.deep.equal(expectedMetadata);
     });
   });
 
   it("allows the user to select multiple files and click on one to play it", () => {
-    cy.visit("http://localhost:5174/");
     cy.get("[data-test='fileInput']").selectFile(
       [
         "cypress/fixtures/audio1.mp3",
@@ -49,18 +50,18 @@ describe("Playlist tab", () => {
     cy.wait(500);
 
     const expectedPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(expectedPlaylist);
     });
 
     // Click on track 3
-    cy.get("[data-test='playlistFiles']>li").contains("audio3.mp3").click();
+    cy.get("[data-test='playlistFiles'] li").contains("audio3.mp3").click();
     cy.wait(1000);
 
     // Track 3 should play and tracks 1 and 2 should not appear anymore
     const newPlaylist = ["audio3.mp3"];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(newPlaylist);
     });
@@ -70,14 +71,13 @@ describe("Playlist tab", () => {
       "Album: Dolor Sit Amet",
       "Track #: 3",
     ];
-    cy.get("[data-test='metadata']>li").then((elements) => {
+    cy.get("[data-test='metadata'] li").then((elements) => {
       const actualMetadata = [...elements].map((li) => li.innerText.trim());
       expect(actualMetadata).to.deep.equal(expectedMetadata);
     });
   });
 
   it("sorts input by filename on upload", () => {
-    cy.visit("http://localhost:5174/");
     cy.get("[data-test='fileInput']").selectFile(
       [
         "cypress/fixtures/audio3.mp3",
@@ -89,23 +89,22 @@ describe("Playlist tab", () => {
     cy.wait(500);
 
     const expectedPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(expectedPlaylist);
     });
   });
 
   it("appends subsequently selected files to the end of the playlist", () => {
-    cy.visit("http://localhost:5174/");
     cy.get("[data-test='fileInput']").selectFile(
       "cypress/fixtures/audio1.mp3",
       { force: true },
     );
 
-    cy.get("[data-test='playlistFiles']>li")
+    cy.get("[data-test='playlistFiles'] li")
       .contains("audio1.mp3")
       .should("exist");
-    cy.get("[data-test='playlistFiles']>li")
+    cy.get("[data-test='playlistFiles'] li")
       .contains("audio2.mp3")
       .should("not.exist");
 
@@ -115,7 +114,7 @@ describe("Playlist tab", () => {
     );
 
     const expectedPlaylist = ["audio1.mp3", "audio2.mp3"];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(expectedPlaylist);
     });
@@ -123,11 +122,10 @@ describe("Playlist tab", () => {
 
   // SKIP cypress doesn't recognize the directory input functionality
   // it("allows the user to select a directory and play all the audio files in it", () => {
-  //   cy.visit("http://localhost:5174/");
   //   cy.get("[data-test='directoryInput']").selectFile("cypress/fixtures");
   //   cy.wait(500);
 
-  //   cy.get("[data-test='playlist']>li").then((elements) => {
+  //   cy.get("[data-test='playlist'] li").then((elements) => {
   //     const actualPlaylist = [...elements].map((li) => li.innerText.trim());
   //     // can't predict the ordering
   //     expect(actualPlaylist).to.include("audio1.mp3");
@@ -137,7 +135,6 @@ describe("Playlist tab", () => {
   // });
 
   it("plays the next track after the first track is finished", () => {
-    cy.visit("http://localhost:5174/");
     cy.get("[data-test='fileInput']").selectFile(
       [
         "cypress/fixtures/audio1.mp3",
@@ -153,7 +150,7 @@ describe("Playlist tab", () => {
     });
 
     const newPlaylist = ["audio2.mp3", "audio3.mp3"];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(newPlaylist);
     });
@@ -163,14 +160,13 @@ describe("Playlist tab", () => {
       "Album: Dolor Sit Amet",
       "Track #: 2",
     ];
-    cy.get("[data-test='metadata']>li").then((elements) => {
+    cy.get("[data-test='metadata'] li").then((elements) => {
       const actualMetadata = [...elements].map((li) => li.innerText.trim());
       expect(actualMetadata).to.deep.equal(expectedMetadata);
     });
   });
 
   it("resets the app when the end of the last file is reached", () => {
-    cy.visit("http://localhost:5174/");
     cy.get("[data-test='fileInput']").selectFile(
       "cypress/fixtures/audio1.mp3",
       { force: true },
@@ -186,12 +182,11 @@ describe("Playlist tab", () => {
     });
 
     audioEl.should("not.exist");
-    cy.get("[data-test='metadata']>li").should("have.length", 0);
+    cy.get("[data-test='metadata'] li").should("have.length", 0);
     cy.get("[data-test='playlistFiles']").should("not.exist");
   });
 
   it("sorts the playlist in ascending order by default upon upload", () => {
-    cy.visit("http://localhost:5174/");
     cy.get("[data-test='fileInput']").selectFile(
       [
         "cypress/fixtures/audio3.mp3",
@@ -202,14 +197,13 @@ describe("Playlist tab", () => {
     );
 
     const expectedPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(expectedPlaylist);
     });
   });
 
   it("sorts the playlist in descending/ascending order when the sort buttons are clicked", () => {
-    cy.visit("http://localhost:5174/");
     cy.get("[data-test='fileInput']").selectFile(
       [
         "cypress/fixtures/audio3.mp3",
@@ -221,7 +215,7 @@ describe("Playlist tab", () => {
 
     // same behavior as previous test, in case that test changes
     const expectedPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(expectedPlaylist);
     });
@@ -229,7 +223,7 @@ describe("Playlist tab", () => {
     // first sort desc to change the order
     cy.get("[data-test='sortDesc']").click();
     const descPlaylist = ["audio3.mp3", "audio2.mp3", "audio1.mp3"];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(descPlaylist);
     });
@@ -237,14 +231,13 @@ describe("Playlist tab", () => {
     // then sort asc to change the order
     cy.get("[data-test='sortAsc']").click();
     const ascPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(ascPlaylist);
     });
   });
 
   it("shuffles the playlist when the shuffle button is clicked", () => {
-    cy.visit("http://localhost:5174/");
     cy.get("[data-test='fileInput']").selectFile(
       [
         "cypress/fixtures/audio3.mp3",
@@ -266,14 +259,14 @@ describe("Playlist tab", () => {
       "audio3.mp3",
       "audio3.mp3",
     ];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(initialPlaylist);
     });
 
     const shuffle = cy.get("[data-test='shuffle']");
     shuffle.click();
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       // if shuffle returns elements in the same order as before, try again;
       // shouldn't collide very often with 6 files
@@ -287,7 +280,6 @@ describe("Playlist tab", () => {
   });
 
   it("clears the playlist when the trash button is clicked", () => {
-    cy.visit("http://localhost:5174/");
     cy.get("[data-test='fileInput']").selectFile(
       [
         "cypress/fixtures/audio3.mp3",
@@ -299,7 +291,7 @@ describe("Playlist tab", () => {
 
     // same behavior as previous test, in case that test changes
     const expectedPlaylist = ["audio1.mp3", "audio2.mp3", "audio3.mp3"];
-    cy.get("[data-test='playlistFiles']>li").then((elements) => {
+    cy.get("[data-test='playlistFiles'] li").then((elements) => {
       const actualPlaylist = [...elements].map((li) => li.innerText.trim());
       expect(actualPlaylist).to.deep.equal(expectedPlaylist);
     });

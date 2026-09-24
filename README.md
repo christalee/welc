@@ -25,6 +25,7 @@ DB_PASSWORD=YOUR_PASSWORD
 9. View the results at `http://localhost:5173/`
 
 ## How to run tests on this project
+
 1. Set up a Postgres DB called `welc_test`.
 2. Create a `.env.testing` file (which will not be source-controlled) with correct values for these variables:
 ```

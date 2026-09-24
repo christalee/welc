@@ -59,7 +59,11 @@ function Column(
           >
             {props.children}
             {allowsSorting && (
-              <span aria-hidden="true" className={styles.sorter}>
+              <span
+                aria-hidden="true"
+                data-test="sorter"
+                className={styles.sorter}
+              >
                 {sortDirection === "ascending" ? (
                   <FontAwesomeIcon icon={faChevronUp} />
                 ) : (
@@ -68,7 +72,7 @@ function Column(
               </span>
             )}
           </Group>
-          {props.allowsResizing && <ColumnResizer className={styles.resizer} />}
+          {props.allowsResizing && <ColumnResizer data-test="resizer" className={styles.resizer} />}
         </div>
       )}
     </AriaColumn>
@@ -82,7 +86,9 @@ function Library({
 }: {
   libraryPath: string;
   libraryData: LibraryData[] | undefined;
-  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData[] | undefined>>;
+  setLibraryData: React.Dispatch<
+    React.SetStateAction<LibraryData[] | undefined>
+  >;
 }) {
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
@@ -192,9 +198,13 @@ function Library({
                       {""}
                     </Checkbox>
                   </Cell>
-                  <Cell className={styles.expandableCell}>
+                  <Cell data-test="nameCell" className={styles.expandableCell}>
                     {item.children.length > 0 && (
-                      <Button slot="chevron" className={styles.expander}>
+                      <Button
+                        slot="chevron"
+                        data-test="expander"
+                        className={styles.expander}
+                      >
                         <FontAwesomeIcon icon={faChevronRight} />
                       </Button>
                     )}

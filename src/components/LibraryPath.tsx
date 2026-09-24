@@ -47,7 +47,7 @@ function LibraryPath({
         value={libraryPath}
         onChange={(e) => setLibraryPath(e.target.value)}
       /></label>
-      <button data-test="scanLibrary" onClick={handleLibraryScan}>Re/Scan</button>
+      <button data-test="scanLibrary" onClick={handleLibraryScan}>Scan</button>
       <button data-test="clearLibrary" onClick={handleLibraryDelete}>Clear</button>
     </div>
   );
