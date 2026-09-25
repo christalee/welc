@@ -2,7 +2,8 @@ describe("Playlist tab", () => {
   beforeEach(() => {
     // Set the stage
     cy.visit("http://localhost:5174/");
-  })
+  });
+
   it("displays a filepicker", () => {
     cy.get("[data-test='fileInput']").should("exist");
   });
