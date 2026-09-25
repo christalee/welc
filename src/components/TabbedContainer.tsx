@@ -6,6 +6,7 @@ import {
   TabPanels,
   TabPanel,
   SelectionIndicator,
+  type Selection
 } from "react-aria-components";
 
 import DirectoryInput from "./DirectoryInput";
@@ -31,6 +32,9 @@ const hydrateTabs = ({
   setLibraryPath,
   libraryData,
   setLibraryData,
+  librarySelected,
+  setLibrarySelected,
+  handlePlaySelected,
 }: {
   handleDirectoryInput: (
     e: React.ChangeEvent<HTMLInputElement, Element>,
@@ -38,7 +42,7 @@ const hydrateTabs = ({
   handleFileInput: (
     e: React.ChangeEvent<HTMLInputElement, Element>,
   ) => Promise<void>;
-  files: File[];
+  files: (string | File)[];
   handleSortAsc: () => Promise<void>;
   handleSortDesc: () => Promise<void>;
   handleShuffle: () => Promise<void>;
@@ -48,6 +52,9 @@ const hydrateTabs = ({
   setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
   libraryData: LibraryData[] | undefined;
   setLibraryData: React.Dispatch<React.SetStateAction<LibraryData[] | undefined>>;
+  librarySelected: Selection;
+  setLibrarySelected: React.Dispatch<React.SetStateAction<Selection>>;
+  handlePlaySelected: () => Promise<void>;
 }) => {
   return [
     {
@@ -77,11 +84,14 @@ const hydrateTabs = ({
             libraryPath={libraryPath}
             setLibraryPath={setLibraryPath}
             setLibraryData={setLibraryData}
+            handlePlaySelected={handlePlaySelected}
           />
           <Library
             libraryPath={libraryPath}
             libraryData={libraryData}
             setLibraryData={setLibraryData}
+            selected={librarySelected}
+            setSelected={setLibrarySelected}
           />
         </>
       ),
@@ -98,6 +108,7 @@ function TabbedContainer({
   handleShuffle,
   handleEmptyPlaylist,
   handleFileNameClick,
+  startPlaying,
 }: {
   handleDirectoryInput: (
     e: React.ChangeEvent<HTMLInputElement, Element>,
@@ -105,17 +116,23 @@ function TabbedContainer({
   handleFileInput: (
     e: React.ChangeEvent<HTMLInputElement, Element>,
   ) => Promise<void>;
-  files: File[];
+  files: (string | File)[];
   handleSortAsc: () => Promise<void>;
   handleSortDesc: () => Promise<void>;
   handleShuffle: () => Promise<void>;
   handleEmptyPlaylist: () => void;
   handleFileNameClick: (index: number) => Promise<void>;
+  startPlaying: (filesArray: (string | File)[]) => Promise<void>;
 }) {
   const [libraryPath, setLibraryPath] = useState<string>("");
   const [libraryData, setLibraryData] = useState<LibraryData[] | undefined>(
     undefined,
   );
+  const [librarySelected, setLibrarySelected] = useState<Selection>(new Set());
+
+  async function handlePlaySelected() {
+    await startPlaying(Array.from(librarySelected));
+  }
 
   const tabs = hydrateTabs({
     handleDirectoryInput,
@@ -130,6 +147,9 @@ function TabbedContainer({
     setLibraryPath,
     libraryData,
     setLibraryData,
+    librarySelected, 
+    setLibrarySelected,
+    handlePlaySelected,
   });
 
   return (

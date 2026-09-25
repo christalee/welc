@@ -83,18 +83,21 @@ function Library({
   libraryPath,
   libraryData,
   setLibraryData,
+  selected,
+  setSelected,
 }: {
   libraryPath: string;
   libraryData: LibraryData[] | undefined;
   setLibraryData: React.Dispatch<
     React.SetStateAction<LibraryData[] | undefined>
   >;
+  selected: Selection;
+  setSelected: React.Dispatch<React.SetStateAction<Selection>>;
 }) {
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "name",
     direction: "ascending",
   });
-  const [selected, setSelected] = useState<Selection>(new Set());
 
   let sortedLibrary = libraryData;
   if (sortDescriptor && libraryData) {

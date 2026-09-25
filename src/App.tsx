@@ -10,19 +10,24 @@ import { sortByNameAsc, sortByNameDesc } from "./utils";
 import styles from "./App.module.scss";
 
 function App() {
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<(string | File)[]>([]);
   const [playing, setPlaying] = useState<string>("");
   const [metadata, setMetadata] = useState<IAudioMetadata | undefined>(
     undefined,
   );
 
-  async function playFile(filesArray: File[], index: number) {
+  async function playFile(filesArray: (string | File)[], index: number) {
     const file = filesArray[index];
-    setPlaying(window.URL.createObjectURL(file));
-    await getMetadata(file);
+    if (typeof file === "string") {
+      console.log(file);
+      // setPlaying(file);
+    } else {
+      setPlaying(window.URL.createObjectURL(file));
+      await getMetadata(file);
+    }
   }
 
-  async function startPlaying(filesArray: File[]) {
+  async function startPlaying(filesArray: (string | File)[]) {
     const newFiles = [...files, ...filesArray];
     if (files.length === 0) {
       await playFile(newFiles, 0);
@@ -103,6 +108,7 @@ function App() {
           handleShuffle={handleShuffle}
           handleEmptyPlaylist={handleEmptyPlaylist}
           handleFileNameClick={switchPlaying}
+          startPlaying={startPlaying}
         />
       </section>
       <div className={styles.ticks}></div>

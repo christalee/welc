@@ -1,18 +1,22 @@
 import { useMemo } from "react";
 
-export const sortByNameAsc = (a: File, b: File) => {
-  if (a.name > b.name) {
+export const sortByNameAsc = (a: string | File, b: string | File) => {
+  const aName = typeof a === "string" ? a : a.name;
+  const bName = typeof b === "string" ? b : b.name;
+  if (aName > bName) {
     return 1;
-  } else if (a.name < b.name) {
+  } else if (aName < bName) {
     return -1;
   }
   return 0;
 };
 
-export const sortByNameDesc = (a: File, b: File) => {
-  if (a.name < b.name) {
+export const sortByNameDesc = (a: string | File, b: string | File) => {
+  const aName = typeof a === "string" ? a : a.name;
+  const bName = typeof b === "string" ? b : b.name;
+  if (aName < bName) {
     return 1;
-  } else if (a.name > b.name) {
+  } else if (aName > bName) {
     return -1;
   }
   return 0;

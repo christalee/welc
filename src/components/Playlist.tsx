@@ -16,7 +16,7 @@ function Playlist({
   handleEmptyPlaylist,
   handleFileNameClick,
 }: {
-  files: File[];
+  files: (string | File)[];
   handleSortAsc: () => Promise<void>;
   handleSortDesc: () => Promise<void>;
   handleShuffle: () => Promise<void>;
@@ -55,10 +55,10 @@ function Playlist({
       <ul data-test="playlistFiles" className={styles.playlist}>
         {files.map((file, index) => (
           <li
-            key={`${file.name}-${index}`}
+            key={`${typeof file === "string" ? decodeURI(file) : file.name}-${index}`}
             onClick={async () => await handleFileNameClick(index)}
           >
-            {file.name}
+            {typeof file === "string" ? decodeURI(file) : file.name}
           </li>
         ))}
       </ul>

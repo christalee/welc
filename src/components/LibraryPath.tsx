@@ -5,11 +5,13 @@ import styles from "./libraryPath.module.scss";
 function LibraryPath({
   libraryPath,
   setLibraryPath,
-  setLibraryData
+  setLibraryData,
+  handlePlaySelected,
 }: {
   libraryPath: string;
   setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
   setLibraryData: React.Dispatch<React.SetStateAction<LibraryData[] | undefined>>;
+  handlePlaySelected: () => Promise<void>;
 }) {
   async function handleLibraryScan() {
     await fetch("/api/scan_library", {
@@ -49,6 +51,7 @@ function LibraryPath({
       /></label>
       <button data-test="scanLibrary" onClick={handleLibraryScan}>Scan</button>
       <button data-test="clearLibrary" onClick={handleLibraryDelete}>Clear</button>
+      <button data-test="playSelection" onClick={handlePlaySelected}>Play!</button>
     </div>
   );
 }
