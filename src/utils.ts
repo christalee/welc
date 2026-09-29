@@ -22,6 +22,13 @@ export const sortByNameDesc = (a: string | File, b: string | File) => {
   return 0;
 };
 
+export const parseFilename = (filepath: string, libraryPath: string) => {
+  const uri = decodeURI(filepath);
+  const url = new URL(uri);
+  // add 1 to slice the trailing /
+  return decodeURIComponent(url.pathname).slice(libraryPath.length + 1);
+};
+
 export type LibraryData = {
   name: string;
   filepath: string;

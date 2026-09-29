@@ -25,6 +25,7 @@ import { debounce } from "lodash";
 
 import Checkbox from "./Checkbox";
 import {
+  parseFilename,
   getLibrary,
   type LibraryData,
   useTreeHelpers,
@@ -33,13 +34,6 @@ import {
 } from "../utils";
 
 import styles from "./library.module.scss";
-
-const parseFilename = (filepath: string, libraryPath: string) => {
-  const uri = decodeURI(filepath);
-  const url = new URL(uri);
-  // add 1 to slice the trailing /
-  return decodeURIComponent(url.pathname).slice(libraryPath.length + 1);
-};
 
 interface ColumnProps extends AriaColumnProps {
   allowsResizing?: boolean;

@@ -10,6 +10,7 @@ from models import Music
 from utils import create_filetree_with_metadata
 
 AUDIO_EXTENSIONS = [".mp3", ".ogg", ".flac", ".wav", ".m4a"]
+MUSIC_DIR_ENV = "VITE_MUSIC_DIR"
 
 
 @app.route("/")
@@ -88,11 +89,11 @@ def delete_library():
 def get_file():
     file_uri = request.get_json()["file"]
     file_path = Path.from_uri(file_uri)
-    allowed_dir = Path(os.environ.get("MUSIC_DIR"))
+    allowed_dir = Path(os.environ.get(MUSIC_DIR_ENV))
     if not allowed_dir:
-        abort(500, description="MUSIC_DIR not configured in environment")
+        abort(500, description=f"{MUSIC_DIR_ENV} not configured in environment")
     if file_path.is_relative_to(allowed_dir):
         relative_file = file_path.relative_to(allowed_dir)
         return send_from_directory(allowed_dir, relative_file)
     else:
-        abort(404, description="File not found in MUSIC_DIR")
+        abort(404, description=f"File not found in {MUSIC_DIR_ENV}")
