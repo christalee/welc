@@ -11,7 +11,7 @@ import styles from "./App.module.scss";
 
 function App() {
   const [files, setFiles] = useState<(string | File)[]>([]);
-  const [playing, setPlaying] = useState<string>("");
+  const [playing, setPlaying] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<IAudioMetadata | undefined>(
     undefined,
   );
@@ -19,8 +19,28 @@ function App() {
   async function playFile(filesArray: (string | File)[], index: number) {
     const file = filesArray[index];
     if (typeof file === "string") {
-      console.log(file);
-      // setPlaying(file);
+      await fetch("/api/file", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          file,
+        }),
+      }).then(async function(response) {
+        const reader = response.body?.getReader();
+        const chunks = [];
+        while (reader) {
+          const { done, value } = await reader.read();
+          if (done) {
+            break;
+          }
+          chunks.push(value);
+        }
+        const blob = new File(chunks, file);
+        setPlaying(window.URL.createObjectURL(blob));
+        await getMetadata(blob);
+      });
     } else {
       setPlaying(window.URL.createObjectURL(file));
       await getMetadata(file);
@@ -36,7 +56,9 @@ function App() {
   }
 
   async function switchPlaying(index: number) {
-    window.URL.revokeObjectURL(playing);
+    if (playing) {
+      window.URL.revokeObjectURL(playing);
+    }
     setFiles((prevFiles) => prevFiles.slice(index));
     await playFile(files, index);
   }
@@ -83,7 +105,9 @@ function App() {
   }
 
   const handleEmptyPlaylist = () => {
-    window.URL.revokeObjectURL(playing);
+    if (playing) {
+      window.URL.revokeObjectURL(playing);
+    }
     setPlaying("");
     setMetadata(undefined);
     setFiles([]);
@@ -94,7 +118,7 @@ function App() {
       <section className={styles.center}>
         <h1>WeLC</h1>
         {metadata && <Metadata metadata={metadata} />}
-        {files.length > 0 && (
+        {files.length > 0 && playing && (
           <Player playing={playing} handleEndOfFile={handleEndOfFile} />
         )}
       </section>

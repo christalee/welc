@@ -1,7 +1,9 @@
-from flask import request
+from flask import request, abort, send_from_directory
 from tinytag import TinyTag
-from pathlib import Path
 from sqlalchemy.engine import Row
+
+from pathlib import Path
+import os
 
 from app import app, db
 from models import Music
@@ -18,10 +20,13 @@ def heartbeat():
 @app.route("/api/library", methods=["POST"])
 def get_library():
     library_path = request.get_json()["library"]
-    path = Path(library_path).as_uri()
-    files = get_library_from_db(path)
+    try:
+        path = Path(library_path).as_uri()
+        files = get_library_from_db(path)
 
-    return files
+        return files
+    except Exception as e:
+        abort(404, description=e)
 
 
 def get_library_from_db(path_uri: str):
@@ -77,3 +82,17 @@ def delete_library():
         db.session.execute(query)
 
     return {"deleted": True}
+
+
+@app.route("/api/file", methods=["POST"])
+def get_file():
+    file_uri = request.get_json()["file"]
+    file_path = Path.from_uri(file_uri)
+    allowed_dir = Path(os.environ.get("MUSIC_DIR"))
+    if not allowed_dir:
+        abort(500, description="MUSIC_DIR not configured in environment")
+    if file_path.is_relative_to(allowed_dir):
+        relative_file = file_path.relative_to(allowed_dir)
+        return send_from_directory(allowed_dir, relative_file)
+    else:
+        abort(404, description="File not found in MUSIC_DIR")
