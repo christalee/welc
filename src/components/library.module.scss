@@ -18,6 +18,14 @@
   margin-left: 8px;
 }
 
+// keep this aligned with .expandableCell padding
+[data-key="name"] .columnLabel {
+  --chevron-placeholder: 24px;
+  margin-left: calc(
+    8px + var(--chevron-placeholder)
+  );
+}
+
 .checkboxField {
   height: 14px;
   width: 14px;
@@ -46,6 +54,7 @@
   }
 }
 
+// keep this aligned with [data-key="name"] .columnLabel
 .expandableCell {
   --chevron-placeholder: 24px;
   padding-inline-start: calc(
@@ -55,6 +64,10 @@
   &[data-has-child-items] {
     --chevron-placeholder: 0px;
   }
+}
+
+.cell {
+  padding-left: 8px;
 }
 
 .expander {

@@ -66,7 +66,9 @@ function Column(
               </span>
             )}
           </Group>
-          {props.allowsResizing && <ColumnResizer data-test="resizer" className={styles.resizer} />}
+          {props.allowsResizing && (
+            <ColumnResizer data-test="resizer" className={styles.resizer} />
+          )}
         </div>
       )}
     </AriaColumn>
@@ -209,11 +211,15 @@ function Library({
                       ? item.metadata.title
                       : parseFilename(item.filepath, libraryPath)}
                   </Cell>
-                  <Cell>
+                  <Cell className={styles.cell}>
                     {item.metadata?.artist ? item.metadata.artist : ""}
                   </Cell>
-                  <Cell>{item.metadata?.album ? item.metadata.album : ""}</Cell>
-                  <Cell>{item.metadata?.year ? item.metadata.year : ""}</Cell>
+                  <Cell className={styles.cell}>
+                    {item.metadata?.album ? item.metadata.album : ""}
+                  </Cell>
+                  <Cell className={styles.cell}>
+                    {item.metadata?.year ? item.metadata.year : ""}
+                  </Cell>
                   <Collection items={item.children}>{renderItem}</Collection>
                 </Row>
               );
