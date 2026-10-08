@@ -6,7 +6,7 @@ import {
   TabPanels,
   TabPanel,
   SelectionIndicator,
-  type Selection
+  type Selection,
 } from "react-aria-components";
 
 import DirectoryInput from "./DirectoryInput";
@@ -51,7 +51,9 @@ const hydrateTabs = ({
   libraryPath: string;
   setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
   libraryData: LibraryData[] | undefined;
-  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData[] | undefined>>;
+  setLibraryData: React.Dispatch<
+    React.SetStateAction<LibraryData[] | undefined>
+  >;
   librarySelected: Selection;
   setLibrarySelected: React.Dispatch<React.SetStateAction<Selection>>;
   handlePlaySelected: () => Promise<void>;
@@ -131,7 +133,8 @@ function TabbedContainer({
   const [librarySelected, setLibrarySelected] = useState<Selection>(new Set());
 
   async function handlePlaySelected() {
-    await startPlaying(Array.from(librarySelected));
+    // librarySelected is a set of strings but we map String to satisfy the type checker
+    await startPlaying(Array.from(librarySelected).map((key) => String(key)));
   }
 
   const tabs = hydrateTabs({
@@ -147,7 +150,7 @@ function TabbedContainer({
     setLibraryPath,
     libraryData,
     setLibraryData,
-    librarySelected, 
+    librarySelected,
     setLibrarySelected,
     handlePlaySelected,
   });

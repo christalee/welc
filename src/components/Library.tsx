@@ -98,13 +98,18 @@ function Library({
   let sortedLibrary = libraryData;
   if (sortDescriptor && libraryData) {
     sortedLibrary = libraryData.sort((a, b) => {
-      const first = a[sortDescriptor.column];
-      const second = b[sortDescriptor.column];
-      let cmp = first < second ? -1 : 1;
-      if (sortDescriptor.direction === "descending") {
-        cmp = -cmp;
+      // narrows type Key to string
+      if (sortDescriptor.column === "name") {
+        const first = a[sortDescriptor.column];
+        const second = b[sortDescriptor.column];
+        let cmp = first < second ? -1 : 1;
+        if (sortDescriptor.direction === "descending") {
+          cmp = -cmp;
+        }
+        return cmp;
       }
-      return cmp;
+      // dummy return to satisfy type checker; this table only sorts on "name"
+      return 1;
     });
   }
 
