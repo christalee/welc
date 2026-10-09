@@ -15,6 +15,8 @@ config = context.config
 # the DB connection string later on, either for testing or dev
 if config.config_ini_section == "test":
     load_dotenv("../.env.testing")
+elif config.config_ini_section == "production":
+    load_dotenv("../.env.production")
 else:
     load_dotenv("../.env.development")
 
