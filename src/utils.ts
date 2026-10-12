@@ -44,6 +44,8 @@ export type LibraryData = {
   children: LibraryData[];
 };
 
+export const baseUrl = import.meta.env.BASE_URL
+
 export async function getLibrary({
   libraryPath,
   setLibraryData,
@@ -51,7 +53,7 @@ export async function getLibrary({
   libraryPath: string;
   setLibraryData: React.Dispatch<React.SetStateAction<LibraryData[] | undefined>>;
 }) {
-  await fetch("/api/library", {
+  await fetch(`${baseUrl}/api/library`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

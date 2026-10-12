@@ -1,4 +1,4 @@
-import { getLibrary, type LibraryData } from "../utils";
+import { getLibrary, type LibraryData, baseUrl } from "../utils";
 
 import styles from "./libraryPath.module.scss";
 
@@ -14,7 +14,7 @@ function LibraryPath({
   handlePlaySelected: () => Promise<void>;
 }) {
   async function handleLibraryScan() {
-    await fetch("/api/scan_library", {
+    await fetch(`${baseUrl}/api/scan_library`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,7 +27,7 @@ function LibraryPath({
   }
 
   async function handleLibraryDelete() {
-    await fetch("/api/delete_library", {
+    await fetch(`${baseUrl}/api/delete_library`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -5,7 +5,7 @@ import { shuffle } from "lodash";
 import Metadata from "./components/Metadata";
 import Player from "./components/Player";
 import TabbedContainer from "./components/TabbedContainer";
-import { sortByNameAsc, sortByNameDesc } from "./utils";
+import { sortByNameAsc, sortByNameDesc, baseUrl } from "./utils";
 
 import styles from "./App.module.scss";
 
@@ -19,7 +19,7 @@ function App() {
   async function playFile(filesArray: (string | File)[], index: number) {
     const file = filesArray[index];
     if (typeof file === "string") {
-      await fetch("/api/file", {
+      await fetch(`${baseUrl}/api/file`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
