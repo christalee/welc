@@ -17,6 +17,7 @@ DB_PORT=5432  # change if you use a non-default port
 DB_NAME=welc
 DB_USERNAME=YOUR_USERNAME
 DB_PASSWORD=YOUR_PASSWORD
+VITE_MUSIC_DIR=/path/to/your_music
 ```
 5. Create the relevant tables (from inside the venv): `alembic upgrade head`
 6. Run the backend dev server: `npm run api`
@@ -35,6 +36,7 @@ DB_PORT=5432  # change if you use a non-default port
 DB_NAME=welc_test
 DB_USERNAME=YOUR_TEST_USERNAME
 DB_PASSWORD=YOUR_TEST_PASSWORD
+VITE_MUSIC_DIR=/path/to/your_fixtures
 ```
 3. Create the relevant tables (from inside the venv): `alembic --name test upgrade head`
 4. Run the frontend tests headless (`npm run ci`) or interactively (`npm run api:test && npm run dev:test && npm run cypress`)
