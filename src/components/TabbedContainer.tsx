@@ -85,7 +85,9 @@ const hydrateTabs = ({
           <LibraryPath
             libraryPath={libraryPath}
             setLibraryPath={setLibraryPath}
+            libraryData={libraryData}
             setLibraryData={setLibraryData}
+            setLibrarySelected={setLibrarySelected}
             handlePlaySelected={handlePlaySelected}
           />
           <Library

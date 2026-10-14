@@ -139,22 +139,18 @@ describe("Library tab", () => {
     cy.wait(1000);
 
     const expectedNamesAsc = ["Track 1", "Track 2", "Track 3"];
-    cy.get("[data-test='nameCell']").then(
-      (cells) => {
-        const actualNames = [...cells].map((cell) => cell.innerText.trim());
-        expect(actualNames).to.deep.equal(expectedNamesAsc);
-      },
-    );
+    cy.get("[data-test='nameCell']").then((cells) => {
+      const actualNames = [...cells].map((cell) => cell.innerText.trim());
+      expect(actualNames).to.deep.equal(expectedNamesAsc);
+    });
 
     cy.get("[data-test='sorter']").click();
-    const expectedNamesDesc = ["Track 3", "Track 2", "Track 1"];
 
-    cy.get("[data-test='nameCell']").then(
-      (cells) => {
-        const actualNames = [...cells].map((cell) => cell.innerText.trim());
-        expect(actualNames).to.deep.equal(expectedNamesDesc);
-      },
-    );
+    const expectedNamesDesc = ["Track 3", "Track 2", "Track 1"];
+    cy.get("[data-test='nameCell']").then((cells) => {
+      const actualNames = [...cells].map((cell) => cell.innerText.trim());
+      expect(actualNames).to.deep.equal(expectedNamesDesc);
+    });
   });
 
   it("includes resize handles on the Name, Artist, and Album columns", () => {
@@ -179,5 +175,37 @@ describe("Library tab", () => {
     cy.get(
       "[data-test='libraryData'] [data-key='year'] [data-test='resizer']",
     ).should("not.exist");
+  });
+
+  it("rescans the given directory when directed", () => {
+    cy.get("[data-test='libraryPathField']").type(
+      "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
+    );
+    cy.intercept("/api/library", { fixture: 'mockScan3.json'})
+    let scanBtn = cy.get("[data-test='scanLibrary']");
+    scanBtn.should("have.text", "Scan");
+    scanBtn.click();
+    cy.wait(1000);
+
+    // After scanning, files should appear in order and
+    // button text should change
+    scanBtn = cy.get("[data-test='scanLibrary']");
+    scanBtn.should("have.text", "Rescan");
+    const expectedNames3 = ["Track 1", "Track 2", "Track 3"];
+    cy.get("[data-test='nameCell']").then((cells) => {
+      const actualNames = [...cells].map((cell) => cell.innerText.trim());
+      expect(actualNames).to.deep.equal(expectedNames3);
+    });
+
+    // This time, return 4 files
+    cy.intercept({url: "/api/library", times: 1}, { fixture: 'mockScan4.json'})
+    scanBtn.click();
+    cy.wait(1000);
+
+    const expectedNames4 = ["Track 1", "Track 2", "Track 3", "Track 4"];
+    cy.get("[data-test='nameCell']").then((cells) => {
+      const actualNames = [...cells].map((cell) => cell.innerText.trim());
+      expect(actualNames).to.deep.equal(expectedNames4);
+    });
   });
 });
