@@ -10,7 +10,7 @@ def create_rows(
 ) -> List[MusicRow]:
     results = []
     for fp, md in data:
-        row = {"filepath": fp, "metadata_json": md}
+        row: MusicRow = {"filepath": fp, "metadata_json": md}
         results.append(row)
 
     return results

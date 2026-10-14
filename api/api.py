@@ -89,9 +89,10 @@ def delete_library():
 def get_file():
     file_uri = request.get_json()["file"]
     file_path = Path.from_uri(file_uri)
-    allowed_dir = Path(os.environ.get(MUSIC_DIR_ENV))
+    allowed_dir = os.environ.get(MUSIC_DIR_ENV)
     if not allowed_dir:
         abort(500, description=f"{MUSIC_DIR_ENV} not configured in environment")
+    allowed_dir = Path(allowed_dir)
     if file_path.is_relative_to(allowed_dir):
         relative_file = file_path.relative_to(allowed_dir)
         return send_from_directory(allowed_dir, relative_file)
