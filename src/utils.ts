@@ -44,7 +44,12 @@ export type LibraryData = {
   children: LibraryData[];
 };
 
-export const baseUrl = import.meta.env.BASE_URL
+const baseUrlPort = import.meta.env.MODE == "testing" ? 5174 : 5173;
+// Must end in a trailing slash!! for production (npm run build),
+// values are ./ for preview and /welc/ for release
+export const baseUrl = import.meta.env.PROD
+  ? import.meta.env.BASE_URL
+  : `http://localhost:${baseUrlPort}/`;
 
 export async function getLibrary({
   libraryPath,

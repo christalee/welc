@@ -14,7 +14,7 @@ function LibraryPath({
   handlePlaySelected: () => Promise<void>;
 }) {
   async function handleLibraryScan() {
-    await fetch(`${baseUrl}/api/scan_library`, {
+    await fetch(`${baseUrl}api/scan_library`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,7 +27,7 @@ function LibraryPath({
   }
 
   async function handleLibraryDelete() {
-    await fetch(`${baseUrl}/api/delete_library`, {
+    await fetch(`${baseUrl}api/delete_library`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

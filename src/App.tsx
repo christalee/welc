@@ -19,7 +19,7 @@ function App() {
   async function playFile(filesArray: (string | File)[], index: number) {
     const file = filesArray[index];
     if (typeof file === "string") {
-      await fetch(`${baseUrl}/api/file`, {
+      await fetch(`${baseUrl}api/file`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

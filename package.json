@@ -7,7 +7,7 @@
     "dev": "vite",
     "dev:test": "vite --mode testing --port 5174",
     "build": "tsc -b && vite build --base=./",
-    "release": "vite build --base=/welc",
+    "release": "vite build --base=/welc/",
     "lint": "eslint .",
     "preview": "vite preview",
     "cypress": "cypress open",
