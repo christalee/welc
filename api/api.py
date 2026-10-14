@@ -1,5 +1,5 @@
 from flask import request, abort, send_from_directory
-from tinytag import TinyTag
+from tinytag import TinyTag, tinytag
 from sqlalchemy.engine import Row
 
 from pathlib import Path
@@ -49,20 +49,24 @@ def scan_library():
     matched = [f for f in p.rglob("*") if any([f.suffix in AUDIO_EXTENSIONS])]
     files = []
     for file in matched:
-        metadata = TinyTag.get(file)
-        data = {
-            "filepath": Path.as_uri(file),
-            "metadata_json": {
-                "title": metadata.title,
-                "artist": metadata.artist,
-                "album": metadata.album,
-                "year": metadata.year,
-                "track": metadata.track,
-                "length": metadata.duration,
-                "genre": metadata.genre,
-            },
-        }
-        files.append(data)
+        try:
+            metadata = TinyTag.get(file)
+            data = {
+                "filepath": Path.as_uri(file),
+                "metadata_json": {
+                    "title": metadata.title,
+                    "artist": metadata.artist,
+                    "album": metadata.album,
+                    "year": metadata.year,
+                    "track": metadata.track,
+                    "length": metadata.duration,
+                    "genre": metadata.genre,
+                },
+            }
+            files.append(data)
+        except tinytag.ParseError as e:
+            app.logger.error(f"{file} has metadata that could not be parsed: {e}")
+            continue
 
     query = db.insert(Music)
     with db.session.begin():
