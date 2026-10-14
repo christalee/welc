@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import type { Selection } from "react-aria-components";
 
 export const sortByNameAsc = (a: string | File, b: string | File) => {
   const aName = typeof a === "string" ? a : a.name;
@@ -32,14 +33,14 @@ export const parseFilename = (filepath: string, libraryPath: string) => {
 export type LibraryData = {
   name: string;
   filepath: string;
-  metadata: {
-    title: string;
-    artist: string;
-    album: string;
-    year: string;
-    track: number;
-    length: number;
-    genre: string;
+  metadata?: {
+    title?: string;
+    artist?: string;
+    album?: string;
+    year?: string;
+    track?: number;
+    length?: number;
+    genre?: string;
   };
   children: LibraryData[];
 };
@@ -56,9 +57,11 @@ export async function getLibrary({
   setLibraryData,
 }: {
   libraryPath: string;
-  setLibraryData: React.Dispatch<React.SetStateAction<LibraryData[] | undefined>>;
+  setLibraryData: React.Dispatch<
+    React.SetStateAction<LibraryData[] | undefined>
+  >;
 }) {
-  await fetch(`${baseUrl}/api/library`, {
+  await fetch(`${baseUrl}api/library`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -136,4 +139,19 @@ export const cascadeUp = (
     nextSelected.delete(parentId);
   }
   cascadeUp(parentId, childToParent, parentToChildren, nextSelected);
+};
+
+// keep this in sync with the list at the top of api.py
+const AUDIO_EXTENSIONS = [".mp3", ".ogg", ".flac", ".wav", ".m4a"];
+export const filterFiles = (librarySelected: Selection): string[] => {
+  const results = Array.from(librarySelected).filter((entry) => {
+    for (const ext of AUDIO_EXTENSIONS) {
+      if (String(entry).endsWith(ext)) {
+        return true;
+      }
+    }
+    return false;
+  });
+
+  return results.map((entry) => String(entry)).sort(sortByNameAsc);
 };

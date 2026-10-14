@@ -15,7 +15,7 @@ import Playlist from "./Playlist";
 import LibraryPath from "./LibraryPath";
 import Library from "./Library";
 
-import type { LibraryData } from "../utils";
+import { type LibraryData, filterFiles } from "../utils";
 
 import styles from "./tabbedContainer.module.scss";
 
@@ -133,8 +133,7 @@ function TabbedContainer({
   const [librarySelected, setLibrarySelected] = useState<Selection>(new Set());
 
   async function handlePlaySelected() {
-    // librarySelected is a set of strings but we map String to satisfy the type checker
-    await startPlaying(Array.from(librarySelected).map((key) => String(key)));
+    await startPlaying(filterFiles(librarySelected));
   }
 
   const tabs = hydrateTabs({

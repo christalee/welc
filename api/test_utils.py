@@ -1,12 +1,12 @@
 from utils import create_filetree_with_metadata
-from typing import List, Dict, Union, TypedDict
+from typing import List, Dict, Tuple, TypedDict
 from pathlib import Path
 
 MusicRow = TypedDict("MusicRow", {"filepath": str, "metadata_json": Dict[str, str]})
 
 
 def create_rows(
-    data: List[List[Union[str, Dict[str, str]]]],
+    data: List[Tuple[str, Dict[str, str]]],
 ) -> List[MusicRow]:
     results = []
     for fp, md in data:
@@ -31,7 +31,7 @@ metadata5 = {"artist": "Lorem Ipsum", "year": "2005"}
 
 
 def test_single_row():
-    data = [[path1, metadata1]]
+    data = [(path1, metadata1)]
     rows = create_rows(data)
     result = create_filetree_with_metadata(root1, rows)
     assert result == [
@@ -59,7 +59,7 @@ def test_single_row():
 
 
 def test_multiple_rows():
-    data = [[path1, metadata1], [path2, metadata2], [path3, metadata3]]
+    data = [(path1, metadata1), (path2, metadata2), (path3, metadata3)]
     rows = create_rows(data)
     result = create_filetree_with_metadata(root1, rows)
     assert result == [
@@ -99,7 +99,7 @@ def test_multiple_rows():
 
 
 def test_files_at_top():
-    data = [[path1, metadata1], [path2, metadata2], [path3, metadata3]]
+    data = [(path1, metadata1), (path2, metadata2), (path3, metadata3)]
     rows = create_rows(data)
     result = create_filetree_with_metadata(root2, rows)
     assert result == [
@@ -126,11 +126,11 @@ def test_files_at_top():
 
 def test_files_and_dirs():
     data = [
-        [path1, metadata1],
-        [path2, metadata2],
-        [path3, metadata3],
-        [path4, metadata4],
-        [path5, metadata5],
+        (path1, metadata1),
+        (path2, metadata2),
+        (path3, metadata3),
+        (path4, metadata4),
+        (path5, metadata5),
     ]
     rows = create_rows(data)
     result = create_filetree_with_metadata(root1, rows)
@@ -140,6 +140,18 @@ def test_files_and_dirs():
             "filepath": "file:///path",
             "metadata": {},
             "children": [
+                {
+                    "name": "file4.mp3",
+                    "filepath": path4,
+                    "metadata": metadata4,
+                    "children": [],
+                },
+                {
+                    "name": "file5.mp3",
+                    "filepath": path5,
+                    "metadata": metadata5,
+                    "children": [],
+                },
                 {
                     "name": "to",
                     "filepath": "file:///path/to",
@@ -165,6 +177,28 @@ def test_files_and_dirs():
                         },
                     ],
                 },
+            ],
+        }
+    ]
+
+
+def test_sorting():
+    data = [
+        (path3, metadata3),
+        (path4, metadata4),
+        (path1, metadata1),
+        (path5, metadata5),
+        (path2, metadata2),
+    ]
+    rows = create_rows(data)
+    result = create_filetree_with_metadata(root1, rows)
+
+    assert result == [
+        {
+            "name": "path",
+            "filepath": "file:///path",
+            "metadata": {},
+            "children": [
                 {
                     "name": "file4.mp3",
                     "filepath": path4,
@@ -176,6 +210,31 @@ def test_files_and_dirs():
                     "filepath": path5,
                     "metadata": metadata5,
                     "children": [],
+                },
+                {
+                    "name": "to",
+                    "filepath": "file:///path/to",
+                    "metadata": {},
+                    "children": [
+                        {
+                            "name": "file1.mp3",
+                            "filepath": path1,
+                            "metadata": metadata1,
+                            "children": [],
+                        },
+                        {
+                            "name": "file2.mp3",
+                            "filepath": path2,
+                            "metadata": metadata2,
+                            "children": [],
+                        },
+                        {
+                            "name": "file3.mp3",
+                            "filepath": path3,
+                            "metadata": metadata3,
+                            "children": [],
+                        },
+                    ],
                 },
             ],
         }

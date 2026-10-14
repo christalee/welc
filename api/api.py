@@ -9,6 +9,7 @@ from app import app, db
 from models import Music
 from utils import create_filetree_with_metadata
 
+# keep this in sync with the list in utils.ts
 AUDIO_EXTENSIONS = [".mp3", ".ogg", ".flac", ".wav", ".m4a"]
 MUSIC_DIR_ENV = "VITE_MUSIC_DIR"
 

@@ -3,21 +3,19 @@ from pathlib import Path
 
 def format_node(name, child_dict, metadata_dict, prefix_uri=""):
     filepath = Path.as_uri(Path.from_uri(prefix_uri) / name)
-    node = {
-        "name": name,
-        "filepath": filepath,
-        "metadata": {},
-        "children": []
-    }
+    node = {"name": name, "filepath": filepath, "metadata": {}, "children": []}
 
     if filepath in metadata_dict:
         node["metadata"] = metadata_dict[filepath]
 
     if child_dict:
-        node["children"] = [
-            format_node(k, v, metadata_dict, prefix_uri=filepath)
-            for k, v in child_dict.items()
-        ]
+        node["children"] = sorted(
+            [
+                format_node(k, v, metadata_dict, prefix_uri=filepath)
+                for k, v in child_dict.items()
+            ],
+            key=lambda x: x["filepath"],
+        )
 
     return node
 
