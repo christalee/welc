@@ -1,5 +1,11 @@
 import type { Selection } from "react-aria-components";
-import { getLibrary, type LibraryData, baseUrl } from "../utils";
+import {
+  getLibrary,
+  type LibraryData,
+  baseUrl,
+  formatLibraryPath,
+  libraryPrefix,
+} from "../utils";
 
 import styles from "./libraryPath.module.scss";
 
@@ -17,9 +23,7 @@ function LibraryPath({
   setLibraryData: React.Dispatch<
     React.SetStateAction<LibraryData[] | undefined>
   >;
-  setLibrarySelected: React.Dispatch<
-    React.SetStateAction<Selection>
-  >;
+  setLibrarySelected: React.Dispatch<React.SetStateAction<Selection>>;
   handlePlaySelected: () => Promise<void>;
 }) {
   async function handleLibraryScan() {
@@ -55,12 +59,14 @@ function LibraryPath({
   return (
     <div className={styles.libraryPath}>
       <label className={styles.label}>
-        Music Library Path:{" "}
+        Music Library Path: {libraryPrefix}
         <input
           type="text"
           data-test="libraryPathField"
-          value={libraryPath}
-          onChange={(e) => setLibraryPath(e.target.value)}
+          value={formatLibraryPath(libraryPath)}
+          onChange={(e) =>
+            setLibraryPath(libraryPrefix + e.target.value)
+          }
         />
       </label>
       <button data-test="scanLibrary" onClick={handleLibraryScan}>

@@ -6,7 +6,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { parseFilename } from "../utils";
+import { libraryPrefix, parseFilename } from "../utils";
 
 import styles from "./playlist.module.scss";
 
@@ -57,11 +57,11 @@ function Playlist({
       <ul data-test="playlistFiles" className={styles.playlist}>
         {files.map((file, index) => (
           <li
-            key={`${typeof file === "string" ? parseFilename(file, import.meta.env.VITE_MUSIC_DIR) : file.name}-${index}`}
+            key={`${typeof file === "string" ? parseFilename(file, libraryPrefix) : file.name}-${index}`}
             onClick={async () => await handleFileNameClick(index)}
           >
             {typeof file === "string"
-              ? parseFilename(file, import.meta.env.VITE_MUSIC_DIR)
+              ? parseFilename(file, libraryPrefix)
               : file.name}
           </li>
         ))}

@@ -8,12 +8,6 @@ describe("Library tab", () => {
   });
 
   it("shows no files before the directory has been scanned", () => {
-    cy.get("[data-test='libraryData']").should("not.exist");
-
-    cy.get("[data-test='libraryPathField']").type(
-      "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
-    );
-
     cy.get("[data-test='libraryData']>thead")
       .should("exist")
       .should("not.be.empty");
@@ -23,9 +17,6 @@ describe("Library tab", () => {
   });
 
   it("shows files after the directory is scanned", () => {
-    cy.get("[data-test='libraryPathField']").type(
-      "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
-    );
     cy.get("[data-test='libraryData']>thead")
       .should("exist")
       .should("not.be.empty");
@@ -54,9 +45,6 @@ describe("Library tab", () => {
   });
 
   it("shows no files after the directory has been scanned and cleared", () => {
-    cy.get("[data-test='libraryPathField']").type(
-      "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
-    );
     cy.get("[data-test='libraryData']>thead")
       .should("exist")
       .should("not.be.empty");
@@ -90,55 +78,49 @@ describe("Library tab", () => {
   });
 
   it("displays the directory tree and shows/hides children upon clicking the button", () => {
-    cy.get("[data-test='libraryPathField']").type(
-      "/Users/christalee/Documents/software/projects/welc/cypress",
-    );
     cy.get("[data-test='scanLibrary']").click();
     cy.wait(1000);
 
     // Assert top-level folder is visible
     cy.get("[data-test='libraryData']>tbody")
-      .contains("fixtures")
+      .contains("mockDir")
       .should("exist");
 
     // Assert child files are not visible
     cy.get("[data-test='libraryData']>tbody")
-      .contains("Track 1")
+      .contains("Track 4")
       .should("not.exist");
     cy.get("[data-test='libraryData']>tbody")
-      .contains("Track 2")
+      .contains("Track 5")
       .should("not.exist");
     cy.get("[data-test='libraryData']>tbody")
-      .contains("Track 3")
+      .contains("Track 6")
       .should("not.exist");
 
     cy.get("[data-test='expander']").click();
 
     // Assert top-level folder is visible
     cy.get("[data-test='libraryData']>tbody")
-      .contains("fixtures")
+      .contains("mockDir")
       .should("exist");
 
     // Assert child files are visible
     cy.get("[data-test='libraryData']>tbody")
-      .contains("Track 1")
+      .contains("Track 4")
       .should("exist");
     cy.get("[data-test='libraryData']>tbody")
-      .contains("Track 2")
+      .contains("Track 5")
       .should("exist");
     cy.get("[data-test='libraryData']>tbody")
-      .contains("Track 3")
+      .contains("Track 6")
       .should("exist");
   });
 
   it("sorts the entries by Name at the top level, asc/desc", () => {
-    cy.get("[data-test='libraryPathField']").type(
-      "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
-    );
     cy.get("[data-test='scanLibrary']").click();
     cy.wait(1000);
 
-    const expectedNamesAsc = ["Track 1", "Track 2", "Track 3"];
+    const expectedNamesAsc = ["Track 1", "Track 2", "Track 3", 'mockDir'];
     cy.get("[data-test='nameCell']").then((cells) => {
       const actualNames = [...cells].map((cell) => cell.innerText.trim());
       expect(actualNames).to.deep.equal(expectedNamesAsc);
@@ -146,7 +128,7 @@ describe("Library tab", () => {
 
     cy.get("[data-test='sorter']").click();
 
-    const expectedNamesDesc = ["Track 3", "Track 2", "Track 1"];
+    const expectedNamesDesc = ["mockDir", "Track 3", "Track 2", "Track 1"];
     cy.get("[data-test='nameCell']").then((cells) => {
       const actualNames = [...cells].map((cell) => cell.innerText.trim());
       expect(actualNames).to.deep.equal(expectedNamesDesc);
@@ -154,9 +136,6 @@ describe("Library tab", () => {
   });
 
   it("includes resize handles on the Name, Artist, and Album columns", () => {
-    cy.get("[data-test='libraryPathField']").type(
-      "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
-    );
     cy.get("[data-test='scanLibrary']").click();
     cy.wait(1000);
 
@@ -178,9 +157,6 @@ describe("Library tab", () => {
   });
 
   it("rescans the given directory when directed", () => {
-    cy.get("[data-test='libraryPathField']").type(
-      "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
-    );
     cy.intercept("/api/library", { fixture: 'mockScan3.json'})
     let scanBtn = cy.get("[data-test='scanLibrary']");
     scanBtn.should("have.text", "Scan");

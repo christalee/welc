@@ -41,3 +41,19 @@ VITE_MUSIC_DIR=/path/to/your_fixtures
 3. Create the relevant tables (from inside the venv): `alembic --name test upgrade head`
 4. Run the frontend tests headless (`npm run ci`) or interactively (`npm run api:test && npm run dev:test && npm run cypress`)
 5. Run the backend tests (from inside the venv): `pytest`
+
+## Credits
+
+The audio files included as part of the test suite are from the Library of Congress's National Jukebox project, which contains recordings in the public domain.
+
+Van Eps, Fred, and Paul Eno. [A Rag-Time Episode.](https://www.loc.gov/item/jukebox-129854/) 1911. Audio.
+
+Fried, Martin, Eddie Edwards, Larry Shields, Benny Krueger, J. Russel Robinson, Tony Sbarbaro, Otis Spencer, et al. [Broadway Rose.](https://www.loc.gov/item/jukebox-39314/) 1920. Audio.
+
+Conway's Band, Julius Lenzberg, and Patrick Conway. [Hungarian Rag.](https://www.loc.gov/item/jukebox-133500/) 1913. Audio.
+
+O'Hare, William Christopher, Henry Lodge, and Arthur Pryor's Band. [Temptation Rag](https://www.loc.gov/item/jukebox-129052/). 1910. Audio.
+
+Arthur Pryor's Band, William Schulz, and Ted Snyder. [Ramshackle Rag.](https://www.loc.gov/item/jukebox-131069/) 1911. Audio.
+
+Whiteman, Paul, Con Conrad, and Paul Whiteman Orchestra. [Moonlight.](https://www.loc.gov/item/jukebox-40078/) 1921. Audio.

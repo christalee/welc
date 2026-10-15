@@ -26,9 +26,14 @@ export const sortByNameDesc = (a: string | File, b: string | File) => {
 export const parseFilename = (filepath: string, libraryPath: string) => {
   const uri = decodeURI(filepath);
   const url = new URL(uri);
-  // add 1 to slice the trailing /
-  return decodeURIComponent(url.pathname).slice(libraryPath.length + 1);
+
+  return decodeURIComponent(url.pathname).slice(libraryPath.length);
 };
+
+export const libraryPrefix = import.meta.env.VITE_MUSIC_DIR + "/";
+export const formatLibraryPath = (libraryPath: string) => {
+  return libraryPath.slice(libraryPrefix.length);
+}
 
 export type LibraryData = {
   name: string;

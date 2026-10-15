@@ -8,9 +8,6 @@ describe("App", () => {
   
   it("should allow files to be played from the media library", () => {
     cy.get("[data-test='libraryTab']").click();
-    cy.get("[data-test='libraryPathField']").type(
-      "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
-    );
     cy.get("[data-test='scanLibrary']").click();
     cy.wait(1000);
     cy.contains("Track 1").click();
@@ -44,9 +41,6 @@ describe("App", () => {
 
     // Add Track 2 via media library (library tab)
     cy.get("[data-test='libraryTab']").click();
-    cy.get("[data-test='libraryPathField']").type(
-      "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
-    );
     cy.get("[data-test='scanLibrary']").click();
     cy.wait(1000);
     cy.contains("Track 2").click();
@@ -88,9 +82,6 @@ describe("App", () => {
     // Add Track 1 via media library (library tab)
     // it should start playing immediately
     cy.get("[data-test='libraryTab']").click();
-    cy.get("[data-test='libraryPathField']").type(
-      "/Users/christalee/Documents/software/projects/welc/cypress/fixtures",
-    );
     cy.get("[data-test='scanLibrary']").click();
     cy.wait(1000);
     cy.contains("Track 1").click();

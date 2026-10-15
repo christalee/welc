@@ -15,7 +15,7 @@ import Playlist from "./Playlist";
 import LibraryPath from "./LibraryPath";
 import Library from "./Library";
 
-import { type LibraryData, filterFiles } from "../utils";
+import { type LibraryData, filterFiles, libraryPrefix } from "../utils";
 
 import styles from "./tabbedContainer.module.scss";
 
@@ -128,7 +128,7 @@ function TabbedContainer({
   handleFileNameClick: (index: number) => Promise<void>;
   startPlaying: (filesArray: (string | File)[]) => Promise<void>;
 }) {
-  const [libraryPath, setLibraryPath] = useState<string>("");
+  const [libraryPath, setLibraryPath] = useState<string>(libraryPrefix);
   const [libraryData, setLibraryData] = useState<LibraryData[] | undefined>(
     undefined,
   );
