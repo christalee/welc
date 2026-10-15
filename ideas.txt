@@ -53,13 +53,19 @@ Media Library design:
 - WONTFIX should also have a Clear All button that just resets the whole DB - handle this via psql for now
 
 Enqueue from Media Library design:
-- add an Add to Playlist (Play?) button to LibraryPath
-- pass down startPlaying to Library so selected files can be enqueued
-* need to enqueue metadata as well as filepath? or just re-retrieve from DB instead of passing from libraryData?
-- modify playFile to request file from the backend if it receives a filepath rather than a File object
-- write an endpoint to retrieve and stream the file from the filesystem (not the DB)
+- DONE add an Add to Playlist (Play?) button to LibraryPath
+- DONE pass down startPlaying to Library so selected files can be enqueued
+* DONE ~need to enqueue metadata as well as filepath?~ or just re-retrieve from DB instead of passing from libraryData?
+- DONE modify playFile to request file from the backend if it receives a filepath rather than a File object
+- DONE write an endpoint to retrieve and stream the file from the filesystem (not the DB)
 - need error handling, updated types
 - ideally lookahead: when current file has 5s left, request the next file if needed
 
 Misc:
-- automatically clear library before scanning if previous data is nonzero
+- DONE automatically clear library before scanning if previous data is nonzero?
+- DONE error handling / continue scanning for metadata errors (TinyTag)
+- DONE? figure out how to make it easier to enter a filepath??
+- search!!
+- DONE if using the parent to select all children (e.g. a whole album or a whole artist), need to filter out non-children from the filelist sent to the player
+- DONE update README
+- DONE add gunicorn to requirements.txt??

@@ -1,8 +1,10 @@
 # WeLC
 
-A minimal audio player. As of 2026-09-24, it plays music selected from any mounted filesystem (including remote sources) via the system filepicker. Features include: displaying file metadata, sorting the playlist by name asc/desc, shuffling the playlist, clearing the playlist, skipping ahead in the playlist by clicking on a filename. It also includes a media library, which takes a directory name as input and scans the filepaths and metadata into the DB, then displays them in a table with checkboxes.
+A minimal audio player. As of 2026-10-15, it plays music selected from any mounted filesystem (including remote sources) via the client's native filepicker or the media library (which is restricted to a specific directory on the server). Features include: displaying file metadata, sorting the playlist by name asc/desc, shuffling the playlist, clearing the playlist, skipping ahead in the playlist by clicking on a filename. It also includes a media library, which takes a directory name as input and scans the filepaths and metadata into the DB, then displays them in a table with checkboxes, from which files can be played.
 
-Under development (2026-09-24): connecting the media library data with the playlist, so files can be selected and enqueued from the media library tab.
+For insight into how this project is deployed, check out [my blog post](https://christalee.teallabs.org/posts/deploying-welc.html) on that topic.
+
+Up next (2026-10-25): release/deploy script, search bar, history tab
 
 ## How to run this project
 
