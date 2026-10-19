@@ -58,26 +58,31 @@ function LibraryPath({
 
   return (
     <div className={styles.libraryPath}>
-      <label className={styles.label}>
-        Music Library Path: {libraryPrefix}
-        <input
-          type="text"
-          data-test="libraryPathField"
-          value={formatLibraryPath(libraryPath)}
-          onChange={(e) =>
-            setLibraryPath(libraryPrefix + e.target.value)
-          }
-        />
+      <label>
+        Music Library Path:
+        <div className={styles.libraryField}>
+          {libraryPrefix}
+          <input
+            type="text"
+            name="libraryPath"
+            className={styles.libraryInput}
+            data-test="libraryPathField"
+            value={formatLibraryPath(libraryPath)}
+            onChange={(e) => setLibraryPath(libraryPrefix + e.target.value)}
+          />
+        </div>
       </label>
-      <button data-test="scanLibrary" onClick={handleLibraryScan}>
-        {libraryData && libraryData.length > 0 ? "Rescan" : "Scan"}
-      </button>
-      <button data-test="clearLibrary" onClick={handleLibraryDelete}>
-        Clear
-      </button>
-      <button data-test="playSelection" onClick={handlePlaySelected}>
-        Play!
-      </button>
+      <div className={styles.libraryButtons}>
+        <button data-test="scanLibrary" onClick={handleLibraryScan}>
+          {libraryData && libraryData.length > 0 ? "Rescan" : "Scan"}
+        </button>
+        <button data-test="clearLibrary" onClick={handleLibraryDelete}>
+          Clear
+        </button>
+        <button data-test="playSelection" onClick={handlePlaySelected}>
+          Play!
+        </button>
+      </div>
     </div>
   );
 }

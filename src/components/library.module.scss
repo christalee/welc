@@ -8,6 +8,10 @@
   border-collapse: collapse;
 }
 
+.tableHeader {
+  background: var(--social-bg);
+}
+
 .columnHeader {
   display: flex;
   justify-content: space-between;
@@ -68,6 +72,20 @@
 
 .cell {
   padding-left: 8px;
+}
+
+@media (max-width: 500px) {
+  .collapse {
+    display: none;
+  }
+
+  .expand {
+    width: 95% !important;
+  }
+
+  .table {
+    width: 100% !important;
+  }
 }
 
 .expander {

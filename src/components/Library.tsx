@@ -25,7 +25,6 @@ import { debounce } from "lodash";
 
 import Checkbox from "./Checkbox";
 import {
-  parseFilename,
   getLibrary,
   type LibraryData,
   useTreeHelpers,
@@ -170,22 +169,22 @@ function Library({
           aria-label="libraryData"
           className={styles.table}
         >
-          <TableHeader>
+          <TableHeader className={styles.tableHeader}>
             <Column id="checkbox" width={25} minWidth={25} maxWidth={25}>
               <Checkbox slot="selection" className={styles.checkboxField}>
                 {""}
               </Checkbox>
             </Column>
-            <Column id="name" isRowHeader allowsResizing allowsSorting>
+            <Column id="name" className={styles.expand} isRowHeader allowsResizing allowsSorting>
               Name
             </Column>
-            <Column id="artist" allowsResizing>
+            <Column id="artist" className={styles.collapse} allowsResizing>
               Artist
             </Column>
-            <Column id="album" allowsResizing>
+            <Column id="album" className={styles.collapse} allowsResizing>
               Album
             </Column>
-            <Column id="year" width={60} minWidth={60} maxWidth={60}>
+            <Column id="year" className={styles.collapse} width={60} minWidth={60} maxWidth={60}>
               Year
             </Column>
           </TableHeader>
@@ -212,17 +211,15 @@ function Library({
                         <FontAwesomeIcon icon={faChevronRight} />
                       </Button>
                     )}
-                    {item.metadata?.title
-                      ? item.metadata.title
-                      : parseFilename(item.filepath, libraryPath)}
+                    {item.metadata?.title ? item.metadata.title : item.name}
                   </Cell>
-                  <Cell className={styles.cell}>
+                  <Cell className={`${styles.cell} ${styles.collapse}`}>
                     {item.metadata?.artist ? item.metadata.artist : ""}
                   </Cell>
-                  <Cell className={styles.cell}>
+                  <Cell className={`${styles.cell} ${styles.collapse}`}>
                     {item.metadata?.album ? item.metadata.album : ""}
                   </Cell>
-                  <Cell className={styles.cell}>
+                  <Cell className={`${styles.cell} ${styles.collapse}`}>
                     {item.metadata?.year ? item.metadata.year : ""}
                   </Cell>
                   <Collection items={item.children}>{renderItem}</Collection>
