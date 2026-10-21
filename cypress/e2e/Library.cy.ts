@@ -120,7 +120,7 @@ describe("Library tab", () => {
     cy.get("[data-test='scanLibrary']").click();
     cy.wait(1000);
 
-    const expectedNamesAsc = ["Track 1", "Track 2", "Track 3", 'mockDir'];
+    const expectedNamesAsc = ["Track 1", "Track 2", "Track 3", "mockDir"];
     cy.get("[data-test='nameCell']").then((cells) => {
       const actualNames = [...cells].map((cell) => cell.innerText.trim());
       expect(actualNames).to.deep.equal(expectedNamesAsc);
@@ -157,7 +157,20 @@ describe("Library tab", () => {
   });
 
   it("rescans the given directory when directed", () => {
-    cy.intercept("/api/library", { fixture: 'mockScan3.json'})
+    const mockScan = (n: number) => {
+      const results = [];
+      for (let i = 1; i <= n; i++) {
+        const o = {
+          name: `audio${i}.mp3`,
+          filepath: `file://${cy.env(['fixtures'])}/audio${i}.mp3`,
+          metadata: { title: `Track ${i}` },
+          children: [],
+        };
+        results.push(o);
+      }
+      return results;
+    };
+    cy.intercept("/api/library", mockScan(3));
     let scanBtn = cy.get("[data-test='scanLibrary']");
     scanBtn.should("have.text", "Scan");
     scanBtn.click();
@@ -174,7 +187,7 @@ describe("Library tab", () => {
     });
 
     // This time, return 4 files
-    cy.intercept({url: "/api/library", times: 1}, { fixture: 'mockScan4.json'})
+    cy.intercept({ url: "/api/library", times: 1 }, mockScan(4));
     scanBtn.click();
     cy.wait(1000);
 

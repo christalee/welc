@@ -28,6 +28,7 @@ export default defineConfig({
       database: process.env.DB_NAME,
       port: process.env.DB_PORT,
     },
+    fixtures: process.env.VITE_MUSIC_DIR
   },
   e2e: {
     setupNodeEvents(on, config) {
