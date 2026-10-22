@@ -38,11 +38,11 @@ DB_PORT=5432  # change if you use a non-default port
 DB_NAME=welc_test
 DB_USERNAME=YOUR_TEST_USERNAME
 DB_PASSWORD=YOUR_TEST_PASSWORD
-VITE_MUSIC_DIR=/path/to/your_fixtures
+VITE_MUSIC_DIR=/path/to/welc/cypress/fixtures
 ```
 3. Create the relevant tables (from inside the venv): `alembic --name test upgrade head`
 4. Run the frontend tests headless (`npm run ci`) or interactively (`npm run api:test && npm run dev:test && npm run cypress`)
-5. Run the backend tests (from inside the venv): `pytest`
+5. Run the backend tests (from the root dir `/welc` with the venv activated): `pytest --envfile .env.testing`
 
 ## Credits
 
