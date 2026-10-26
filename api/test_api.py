@@ -14,9 +14,8 @@ from app import db, app
 
 mockDirFiles = [
     {
-        "children": [],
         "filepath": f"file://{os.environ.get(MUSIC_DIR_ENV)}/mockDir/audio5.mp3",
-        "metadata": {
+        "metadata_json": {
             "album": None,
             "artist": "Lorem Ipsum",
             "genre": None,
@@ -25,12 +24,10 @@ mockDirFiles = [
             "track": 5,
             "year": "2009",
         },
-        "name": "audio5.mp3",
     },
     {
-        "children": [],
         "filepath": f"file://{os.environ.get(MUSIC_DIR_ENV)}/mockDir/audio4.mp3",
-        "metadata": {
+        "metadata_json": {
             "album": None,
             "artist": "Lorem Ipsum",
             "genre": None,
@@ -39,12 +36,10 @@ mockDirFiles = [
             "track": 4,
             "year": "2009",
         },
-        "name": "audio4.mp3",
     },
     {
-        "children": [],
         "filepath": f"file://{os.environ.get(MUSIC_DIR_ENV)}/mockDir/audio6.mp3",
-        "metadata": {
+        "metadata_json": {
             "album": None,
             "artist": "Lorem Ipsum",
             "genre": None,
@@ -53,7 +48,6 @@ mockDirFiles = [
             "track": 6,
             "year": "2009",
         },
-        "name": "audio6.mp3",
     },
 ]
 

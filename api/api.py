@@ -61,16 +61,7 @@ def get_library_from_db(library_str: str):
     with db.session.begin():
         rows = list(map(Row._asdict, db.session.execute(query).all()))
 
-    try:
-        library_uri = Path(library_str).expanduser().resolve(strict=True).as_uri()
-        results = create_filetree_with_metadata(library_uri, rows)
-
-        return results
-
-    # expanduser throws a RuntimeError if it can't find a home dir
-    # resolve throws an OSError when strict and path does not exist
-    except OSError, RuntimeError:
-        abort(400, description=f"Read failed; invalid library path {library_str}")
+    return rows
 
 
 @app.route("/api/scan_library", methods=["POST"])
