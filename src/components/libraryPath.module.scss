@@ -19,6 +19,10 @@
 
 .libraryInput {
   width: 100%;
+
+  &:focus-visible {
+    outline: var(--accent) auto 1px;
+  }
 }
 
 .libraryButtons {
