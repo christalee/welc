@@ -33,20 +33,12 @@ export const parseFilename = (filepath: string, libraryPath: string) => {
 export const libraryPrefix = import.meta.env.VITE_MUSIC_DIR + "/";
 export const formatLibraryPath = (libraryPath: string) => {
   return libraryPath.slice(libraryPrefix.length);
-}
+};
 
 export type LibraryData = {
   name: string;
   filepath: string;
-  metadata?: {
-    title?: string;
-    artist?: string;
-    album?: string;
-    year?: string;
-    track?: number;
-    length?: number;
-    genre?: string;
-  };
+  metadata?: Metadata;
   children: LibraryData[];
 };
 
@@ -76,7 +68,7 @@ export async function getLibrary({
     }),
   })
     .then((response) => response.json())
-    .then((data) => setLibraryData(data));
+    .then((data) => setLibraryData(createFileTree(`file://${libraryPrefix}`, data)));
 }
 
 export function useTreeHelpers(data: LibraryData[] | undefined) {
@@ -159,4 +151,84 @@ export const filterFiles = (librarySelected: Selection): string[] => {
   });
 
   return results.map((entry) => String(entry)).sort(sortByNameAsc);
+};
+
+export type Metadata = {
+  title?: string;
+  artist?: string;
+  album?: string;
+  year?: string;
+  track?: number;
+  length?: number;
+  genre?: string;
+};
+
+export type FlatFileData = {
+  filepath: string;
+  metadata_json: Metadata;
+};
+
+type Tree = Map<string, Tree>;
+
+const compareByFilepath = (a: LibraryData, b: LibraryData) => {
+  if (a.filepath > b.filepath) {
+    return 1;
+  } else if (b.filepath > a.filepath) {
+    return -1;
+  }
+  return 0;
+};
+
+const formatNode = (
+  item: [string, Tree],
+  metadataMap: Map<string, Metadata>,
+  root: string = "file://",
+): LibraryData => {
+  const [name, childMap] = item;
+  const filepath = new URL(name, root).href;
+  const node: LibraryData = {
+    name,
+    filepath,
+    metadata: {},
+    children: [],
+  };
+
+  if (metadataMap.has(filepath)) {
+    node.metadata = metadataMap.get(filepath);
+  }
+
+  if (childMap.size > 0) {
+    node.children = Array.from(childMap)
+      .map((item) => formatNode(item, metadataMap, `${filepath}/`))
+      .sort(compareByFilepath);
+  }
+
+  return node;
+};
+
+export const createFileTree = (
+  rootDir: string,
+  rows: FlatFileData[],
+): LibraryData[] => {
+  const metadataByPath = new Map();
+  const tree = new Map();
+  rows.forEach((row) => {
+    const filePath = row.filepath;
+    metadataByPath.set(filePath, row.metadata_json);
+
+    const segments = decodeURI(filePath).replace(rootDir, "").split("/");
+    let current = tree;
+    segments.forEach((segment) => {
+      if (!current.has(segment)) {
+        current.set(segment, new Map());
+      }
+      current = current.get(segment);
+    });
+  });
+
+  const results = Array.from(tree).map((treeItem) =>
+    formatNode(treeItem, metadataByPath, rootDir),
+  );
+
+  return results;
 };
