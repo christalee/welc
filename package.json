@@ -14,7 +14,8 @@
     "e2e": "cypress run --browser chrome",
     "api": "cd api && .venv/bin/flask --env-file \"../.env.development\" run --debug --no-debugger -p 5172",
     "api:test": "cd api && .venv/bin/flask --env-file \"../.env.testing\" run -p 5171",
-    "ci": "start-server-and-test api:test http-get://127.0.0.1:5171 dev:test http://localhost:5174 e2e"
+    "ci": "start-server-and-test api:test http-get://127.0.0.1:5171 dev:test http://localhost:5174 e2e",
+    "vitest": "vitest"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
@@ -45,7 +46,8 @@
     "start-server-and-test": "^3.0.12",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "vitest": "^5.0.5"
   },
   "allowScripts": {
     "cypress@15.21.1": true,
