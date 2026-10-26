@@ -43,7 +43,7 @@ def get_library():
         if not path.is_relative_to(allowed_path):
             abort(404, description=f"{library_path} is not relative to {allowed_path}")
 
-        return get_library_from_db(library_path)
+        return get_library_from_db(path)
 
     # expanduser throws a RuntimeError if it can't find a home dir
     # resolve throws an OSError when strict and path does not exist
@@ -54,9 +54,9 @@ def get_library():
         abort(404, description=e)
 
 
-def get_library_from_db(library_str: str):
+def get_library_from_db(library_path: Path):
     query = db.select(Music.filepath, Music.metadata_json).where(
-        Music.filepath.like(f"%{library_str}%")
+        Music.filepath.like(f"%{library_path.as_uri()}%")
     )
     with db.session.begin():
         rows = list(map(Row._asdict, db.session.execute(query).all()))

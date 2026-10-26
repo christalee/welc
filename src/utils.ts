@@ -185,7 +185,7 @@ const formatNode = (
   root: string = "file://",
 ): LibraryData => {
   const [name, childMap] = item;
-  const filepath = new URL(name, root).href;
+  const filepath = decodeURI(new URL(name, root).href);
   const node: LibraryData = {
     name,
     filepath,
@@ -213,10 +213,10 @@ export const createFileTree = (
   const metadataByPath = new Map();
   const tree = new Map();
   rows.forEach((row) => {
-    const filePath = row.filepath;
+    const filePath = decodeURI(row.filepath);
     metadataByPath.set(filePath, row.metadata_json);
 
-    const segments = decodeURI(filePath).replace(rootDir, "").split("/");
+    const segments = filePath.replace(rootDir, "").split("/");
     let current = tree;
     segments.forEach((segment) => {
       if (!current.has(segment)) {
