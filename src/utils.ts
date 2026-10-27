@@ -185,7 +185,7 @@ const formatNode = (
   const [name, childMap] = item;
   // encode and then decode in case name, root has a % in it
   const filepath = decodeURIComponent(
-    new URL(encodeURIComponent(name), encodeURIComponent(root)).href,
+    new URL(encodeURIComponent(name), encodeURI(root)).href,
   );
   const node: LibraryData = {
     name,
