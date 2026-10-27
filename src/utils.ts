@@ -185,7 +185,7 @@ const formatNode = (
   root: string = "file://",
 ): LibraryData => {
   const [name, childMap] = item;
-  const filepath = decodeURI(new URL(name, root).href);
+  const filepath = decodeURIComponent(new URL(name, root).href);
   const node: LibraryData = {
     name,
     filepath,
