@@ -9,7 +9,6 @@ import os
 
 from app import app, db
 from models import Music
-from utils import create_filetree_with_metadata
 
 # keep this in sync with the list in utils.ts
 AUDIO_EXTENSIONS = [".mp3", ".ogg", ".flac", ".wav", ".m4a"]
@@ -106,7 +105,10 @@ def scan_library():
                         files,
                     )
                 except UniqueViolation, IntegrityError:
-                    abort(422, description=f"Scan failed; records already exist in {library_path}")
+                    abort(
+                        422,
+                        description=f"Scan failed; records already exist in {library_path}",
+                    )
 
         return {"scanned": len(files)}
 

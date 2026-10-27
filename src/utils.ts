@@ -183,35 +183,29 @@ const formatNode = (
   root: string = "file://",
 ): LibraryData => {
   const [name, childMap] = item;
-  try {
-    const filepath = decodeURI(new URL(name, root).href);
-    const node: LibraryData = {
-      name,
-      filepath,
-      metadata: {},
-      children: [],
-    };
+  // encode and then decode in case name has a % in it
+  // root is unencoded to start with and stays that way
+  const filepath = decodeURIComponent(
+    new URL(encodeURIComponent(name), root).href,
+  );
+  const node: LibraryData = {
+    name,
+    filepath,
+    metadata: {},
+    children: [],
+  };
 
-    if (metadataMap.has(filepath)) {
-      node.metadata = metadataMap.get(filepath);
-    }
-
-    if (childMap.size > 0) {
-      node.children = Array.from(childMap)
-        .map((item) => formatNode(item, metadataMap, `${filepath}/`))
-        .sort(compareByFilepath);
-    }
-
-    return node;
-  } catch (error) {
-    console.log(item, root);
-    console.log(error);
-    return {
-      name: "",
-      filepath: "",
-      children: [],
-    };
+  if (metadataMap.has(filepath)) {
+    node.metadata = metadataMap.get(filepath);
   }
+
+  if (childMap.size > 0) {
+    node.children = Array.from(childMap)
+      .map((item) => formatNode(item, metadataMap, `${filepath}/`))
+      .sort(compareByFilepath);
+  }
+
+  return node;
 };
 
 export const createFileTree = (
@@ -221,7 +215,7 @@ export const createFileTree = (
   const metadataByPath = new Map();
   const tree = new Map();
   rows.forEach((row) => {
-    const filePath = decodeURI(row.filepath);
+    const filePath = decodeURIComponent(row.filepath);
     metadataByPath.set(filePath, row.metadata_json);
 
     const segments = filePath.replace(rootDir, "").split("/");
