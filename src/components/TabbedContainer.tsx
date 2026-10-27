@@ -175,11 +175,12 @@ function TabbedContainer({
     <Tabs>
       <TabList className={styles.container}>
         {tabs.map((tab) => {
+          const lowerTitle = tab.title.toLowerCase();
           return (
             <Tab
-              id={tab.title.toLowerCase()}
-              key={`${tab.title.toLowerCase()}Title`}
-              data-test={`${tab.title.toLowerCase()}Tab`}
+              id={lowerTitle}
+              key={`${lowerTitle}Title`}
+              data-test={`${lowerTitle}Tab`}
               className={styles.tab}
             >
               {tab.title}
@@ -190,11 +191,12 @@ function TabbedContainer({
       </TabList>
       <TabPanels className={styles.tabPanels}>
         {tabs.map((tab) => {
+          const lowerTitle = tab.title.toLowerCase();
           return (
             <TabPanel
-              id={tab.title.toLowerCase()}
-              key={`${tab.title.toLowerCase()}Content`}
-              data-test={`${tab.title.toLowerCase()}Panel`}
+              id={lowerTitle}
+              key={`${lowerTitle}Content`}
+              data-test={`${lowerTitle}Panel`}
             >
               {tab.content}
             </TabPanel>
