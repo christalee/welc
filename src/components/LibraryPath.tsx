@@ -5,6 +5,7 @@ import {
   baseUrl,
   formatLibraryPath,
   libraryPrefix,
+  type FlatFileData,
 } from "../utils";
 
 import styles from "./libraryPath.module.scss";
@@ -12,6 +13,7 @@ import styles from "./libraryPath.module.scss";
 function LibraryPath({
   libraryPath,
   setLibraryPath,
+  setFlatLibrary,
   libraryData,
   setLibraryData,
   setLibrarySelected,
@@ -19,6 +21,7 @@ function LibraryPath({
 }: {
   libraryPath: string;
   setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
+  setFlatLibrary: React.Dispatch<React.SetStateAction<FlatFileData[]>>;
   libraryData: LibraryData[] | undefined;
   setLibraryData: React.Dispatch<
     React.SetStateAction<LibraryData[] | undefined>
@@ -40,7 +43,7 @@ function LibraryPath({
         library: libraryPath,
       }),
     });
-    await getLibrary({ libraryPath, setLibraryData });
+    await getLibrary({ libraryPath, setFlatLibrary });
   }
 
   async function handleLibraryDelete() {

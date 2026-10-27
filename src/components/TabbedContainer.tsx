@@ -15,7 +15,12 @@ import Playlist from "./Playlist";
 import LibraryPath from "./LibraryPath";
 import Library from "./Library";
 
-import { type LibraryData, filterFiles, libraryPrefix } from "../utils";
+import {
+  type LibraryData,
+  filterFiles,
+  libraryPrefix,
+  type FlatFileData,
+} from "../utils";
 
 import styles from "./tabbedContainer.module.scss";
 
@@ -30,6 +35,8 @@ const hydrateTabs = ({
   handleFileNameClick,
   libraryPath,
   setLibraryPath,
+  flatLibrary,
+  setFlatLibrary,
   libraryData,
   setLibraryData,
   librarySelected,
@@ -50,6 +57,8 @@ const hydrateTabs = ({
   handleFileNameClick: (index: number) => Promise<void>;
   libraryPath: string;
   setLibraryPath: React.Dispatch<React.SetStateAction<string>>;
+  flatLibrary: FlatFileData[];
+  setFlatLibrary: React.Dispatch<React.SetStateAction<FlatFileData[]>>;
   libraryData: LibraryData[] | undefined;
   setLibraryData: React.Dispatch<
     React.SetStateAction<LibraryData[] | undefined>
@@ -85,6 +94,7 @@ const hydrateTabs = ({
           <LibraryPath
             libraryPath={libraryPath}
             setLibraryPath={setLibraryPath}
+            setFlatLibrary={setFlatLibrary}
             libraryData={libraryData}
             setLibraryData={setLibraryData}
             setLibrarySelected={setLibrarySelected}
@@ -92,6 +102,8 @@ const hydrateTabs = ({
           />
           <Library
             libraryPath={libraryPath}
+            flatLibrary={flatLibrary}
+            setFlatLibrary={setFlatLibrary}
             libraryData={libraryData}
             setLibraryData={setLibraryData}
             selected={librarySelected}
@@ -129,6 +141,7 @@ function TabbedContainer({
   startPlaying: (filesArray: (string | File)[]) => Promise<void>;
 }) {
   const [libraryPath, setLibraryPath] = useState<string>(libraryPrefix);
+  const [flatLibrary, setFlatLibrary] = useState<FlatFileData[]>([]);
   const [libraryData, setLibraryData] = useState<LibraryData[] | undefined>(
     undefined,
   );
@@ -149,6 +162,8 @@ function TabbedContainer({
     handleFileNameClick,
     libraryPath,
     setLibraryPath,
+    flatLibrary,
+    setFlatLibrary,
     libraryData,
     setLibraryData,
     librarySelected,

@@ -14,6 +14,9 @@ import {
   Collection,
   type SortDescriptor,
   type Selection,
+  SearchField,
+  Label,
+  Input,
 } from "react-aria-components";
 import {
   faChevronRight,
@@ -30,6 +33,9 @@ import {
   useTreeHelpers,
   cascadeDown,
   cascadeUp,
+  type FlatFileData,
+  createFileTree,
+  libraryPrefix,
 } from "../utils";
 
 import styles from "./library.module.scss";
@@ -76,12 +82,17 @@ function Column(
 
 function Library({
   libraryPath,
+  flatLibrary,
+  setFlatLibrary,
   libraryData,
   setLibraryData,
   selected,
   setSelected,
 }: {
   libraryPath: string;
+  flatLibrary: FlatFileData[];
+  setFlatLibrary: React.Dispatch<
+    React.SetStateAction<FlatFileData[]>>;
   libraryData: LibraryData[] | undefined;
   setLibraryData: React.Dispatch<
     React.SetStateAction<LibraryData[] | undefined>
@@ -93,6 +104,7 @@ function Library({
     column: "name",
     direction: "ascending",
   });
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   let sortedLibrary = libraryData;
   if (sortDescriptor && libraryData) {
@@ -149,86 +161,125 @@ function Library({
   useEffect(() => {
     async function checkLibrary() {
       if (libraryPath.length > 0) {
-        debounceGetLibrary({ libraryPath, setLibraryData });
+        debounceGetLibrary({ libraryPath, setFlatLibrary });
       }
     }
     checkLibrary();
-  }, [libraryPath, setLibraryData, debounceGetLibrary]);
+  }, [libraryPath, setFlatLibrary, debounceGetLibrary]);
+
+  useEffect(() => {
+    let filteredData;
+    const libraryPrefixUri = `file://${libraryPrefix}`
+    const filterFilepath = (item: FlatFileData) => {
+      const filepath = decodeURIComponent(item.filepath.replace(libraryPrefixUri, ""))
+      return filepath.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+    if (searchTerm.length > 0) {
+      filteredData = flatLibrary.filter(filterFilepath);
+    } else {
+      filteredData = flatLibrary;
+    }
+    setLibraryData(createFileTree(libraryPrefixUri, filteredData))
+  }, [searchTerm, flatLibrary, setLibraryData])
 
   return (
     sortedLibrary && (
-      <ResizableTableContainer className={styles.tableContainer}>
-        <Table
-          data-test="libraryData"
-          selectionMode="multiple"
-          treeColumn="name"
-          sortDescriptor={sortDescriptor}
-          onSortChange={setSortDescriptor}
-          selectedKeys={selected}
-          onSelectionChange={handleSelectionChange}
-          aria-label="libraryData"
-          className={styles.table}
-        >
-          <TableHeader className={styles.tableHeader}>
-            <Column id="checkbox" width={25} minWidth={25} maxWidth={25}>
-              <Checkbox slot="selection" className={styles.checkboxField}>
-                {""}
-              </Checkbox>
-            </Column>
-            <Column id="name" className={styles.expand} isRowHeader allowsResizing allowsSorting>
-              Name
-            </Column>
-            <Column id="artist" className={styles.collapse} allowsResizing>
-              Artist
-            </Column>
-            <Column id="album" className={styles.collapse} allowsResizing>
-              Album
-            </Column>
-            <Column id="year" className={styles.collapse} width={60} minWidth={60} maxWidth={60}>
-              Year
-            </Column>
-          </TableHeader>
-          <TableBody items={sortedLibrary} dependencies={[sortedLibrary]}>
-            {function renderItem(item) {
-              return (
-                <Row
-                  key={item.filepath}
-                  id={item.filepath}
-                  className={styles.row}
-                >
-                  <Cell>
-                    <Checkbox slot="selection" className={styles.checkboxField}>
-                      {""}
-                    </Checkbox>
-                  </Cell>
-                  <Cell data-test="nameCell" className={styles.expandableCell}>
-                    {item.children.length > 0 && (
-                      <Button
-                        slot="chevron"
-                        data-test="expander"
-                        className={styles.expander}
+      <>
+        <SearchField className={styles.search} value={searchTerm} onChange={setSearchTerm}>
+          <Label>Filter</Label>
+          <Input data-test="searchField" className={styles.searchInput} />
+        </SearchField>
+        <ResizableTableContainer className={styles.tableContainer}>
+          <Table
+            data-test="libraryData"
+            selectionMode="multiple"
+            treeColumn="name"
+            sortDescriptor={sortDescriptor}
+            onSortChange={setSortDescriptor}
+            selectedKeys={selected}
+            onSelectionChange={handleSelectionChange}
+            aria-label="libraryData"
+            className={styles.table}
+          >
+            <TableHeader className={styles.tableHeader}>
+              <Column id="checkbox" width={25} minWidth={25} maxWidth={25}>
+                <Checkbox slot="selection" className={styles.checkboxField}>
+                  {""}
+                </Checkbox>
+              </Column>
+              <Column
+                id="name"
+                className={styles.expand}
+                isRowHeader
+                allowsResizing
+                allowsSorting
+              >
+                Name
+              </Column>
+              <Column id="artist" className={styles.collapse} allowsResizing>
+                Artist
+              </Column>
+              <Column id="album" className={styles.collapse} allowsResizing>
+                Album
+              </Column>
+              <Column
+                id="year"
+                className={styles.collapse}
+                width={60}
+                minWidth={60}
+                maxWidth={60}
+              >
+                Year
+              </Column>
+            </TableHeader>
+            <TableBody items={sortedLibrary} dependencies={[sortedLibrary]}>
+              {function renderItem(item) {
+                return (
+                  <Row
+                    key={item.filepath}
+                    id={item.filepath}
+                    className={styles.row}
+                  >
+                    <Cell>
+                      <Checkbox
+                        slot="selection"
+                        className={styles.checkboxField}
                       >
-                        <FontAwesomeIcon icon={faChevronRight} />
-                      </Button>
-                    )}
-                    {item.metadata?.title ? item.metadata.title : item.name}
-                  </Cell>
-                  <Cell className={`${styles.cell} ${styles.collapse}`}>
-                    {item.metadata?.artist ? item.metadata.artist : ""}
-                  </Cell>
-                  <Cell className={`${styles.cell} ${styles.collapse}`}>
-                    {item.metadata?.album ? item.metadata.album : ""}
-                  </Cell>
-                  <Cell className={`${styles.cell} ${styles.collapse}`}>
-                    {item.metadata?.year ? item.metadata.year : ""}
-                  </Cell>
-                  <Collection items={item.children}>{renderItem}</Collection>
-                </Row>
-              );
-            }}
-          </TableBody>
-        </Table>
-      </ResizableTableContainer>
+                        {""}
+                      </Checkbox>
+                    </Cell>
+                    <Cell
+                      data-test="nameCell"
+                      className={styles.expandableCell}
+                    >
+                      {item.children.length > 0 && (
+                        <Button
+                          slot="chevron"
+                          data-test="expander"
+                          className={styles.expander}
+                        >
+                          <FontAwesomeIcon icon={faChevronRight} />
+                        </Button>
+                      )}
+                      {item.metadata?.title ? item.metadata.title : item.name}
+                    </Cell>
+                    <Cell className={`${styles.cell} ${styles.collapse}`}>
+                      {item.metadata?.artist ? item.metadata.artist : ""}
+                    </Cell>
+                    <Cell className={`${styles.cell} ${styles.collapse}`}>
+                      {item.metadata?.album ? item.metadata.album : ""}
+                    </Cell>
+                    <Cell className={`${styles.cell} ${styles.collapse}`}>
+                      {item.metadata?.year ? item.metadata.year : ""}
+                    </Cell>
+                    <Collection items={item.children}>{renderItem}</Collection>
+                  </Row>
+                );
+              }}
+            </TableBody>
+          </Table>
+        </ResizableTableContainer>
+      </>
     )
   );
 }

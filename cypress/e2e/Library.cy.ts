@@ -1,3 +1,5 @@
+import type { FlatFileData } from "../../src/utils";
+
 describe("Library tab", () => {
   beforeEach(() => {
     // Clear table before testing
@@ -77,7 +79,7 @@ describe("Library tab", () => {
     cy.get("[data-test='libraryData']>table").should("not.exist");
   });
 
-  it("displays the directory tree and shows/hides children upon clicking the button", () => {
+  it("displays the directory tree and shows/hides children upon clicking the expander", () => {
     cy.get("[data-test='scanLibrary']").click();
     cy.wait(1000);
 
@@ -158,16 +160,16 @@ describe("Library tab", () => {
 
   it("rescans the given directory when directed", () => {
     const mockScan = (n: number) => {
-      const results = [];
-      for (let i = 1; i <= n; i++) {
-        const o = {
-          name: `audio${i}.mp3`,
-          filepath: `file://${cy.env(['fixtures'])}/audio${i}.mp3`,
-          metadata: { title: `Track ${i}` },
-          children: [],
-        };
-        results.push(o);
-      }
+      const results: FlatFileData[] = [];
+      cy.env(["fixtures"]).then((env) => {
+        for (let i = 1; i <= n; i++) {
+          const row = {
+            filepath: `file://${env["fixtures"]}/audio${i}.mp3`,
+            metadata_json: { title: `Track ${i}` },
+          };
+          results.push(row);
+        }
+      });
       return results;
     };
     cy.intercept("/api/library", mockScan(3));
@@ -196,5 +198,67 @@ describe("Library tab", () => {
       const actualNames = [...cells].map((cell) => cell.innerText.trim());
       expect(actualNames).to.deep.equal(expectedNames4);
     });
+  });
+
+  it("filters the results based on input search term", () => {
+    cy.get("[data-test='scanLibrary']").click();
+    cy.wait(1000);
+
+    cy.get("[data-test='nameCell']").contains("Track 1").should("be.visible");
+    cy.get("[data-test='nameCell']").contains("Track 2").should("be.visible");
+    cy.get("[data-test='nameCell']").contains("mockDir").should("be.visible");
+
+    // search term: 1 (should show Track 1 but not Track 2 or mockDir)
+    const search = cy.get("[data-test='searchField']");
+    search.type("1");
+
+    cy.get("[data-test='nameCell']").contains("Track 1").should("be.visible");
+    cy.get("[data-test='nameCell']").contains("Track 2").should("not.exist");
+    cy.get("[data-test='nameCell']").contains("mockDir").should("not.exist");
+
+    // search term: file (no results)
+    search.clear();
+    search.type("file://");
+
+    cy.get("[data-test='libraryData']>tbody")
+      .should("exist")
+      .should("be.empty");
+
+    // search term: fixtures (no results)
+    search.clear();
+    search.type("fixtures");
+
+    cy.get("[data-test='libraryData']>tbody")
+      .should("exist")
+      .should("be.empty");
+  });
+
+  it("applies the search term after results change", () => {
+    cy.get("[data-test='scanLibrary']").click();
+    cy.wait(1000);
+    cy.get("[data-test='expander']").click();
+
+    cy.get("[data-test='nameCell']").contains("Track 1").should("be.visible");
+    cy.get("[data-test='nameCell']").contains("Track 4").should("be.visible");
+    cy.get("[data-test='nameCell']").contains("Track 5").should("be.visible");
+    cy.get("[data-test='nameCell']").contains("Track 6").should("be.visible");
+
+    // search term: audio4 (should show Track 4)
+    cy.get("[data-test='searchField']").type("4");
+
+    cy.get("[data-test='nameCell']").contains("Track 1").should("not.exist");
+    cy.get("[data-test='nameCell']").contains("Track 4").should("be.visible");
+    cy.get("[data-test='nameCell']").contains("Track 5").should("not.exist");
+    cy.get("[data-test='nameCell']").contains("Track 6").should("not.exist");
+
+    // then input mockDir into libraryField
+    cy.get("[data-test='libraryPathField']").type("mockDir");
+    cy.wait(500);
+
+    // should still show Track 4, not Track 5 or 6
+    cy.get("[data-test='nameCell']").contains("Track 1").should("not.exist");
+    cy.get("[data-test='nameCell']").contains("Track 4").should("be.visible");
+    cy.get("[data-test='nameCell']").contains("Track 5").should("not.exist");
+    cy.get("[data-test='nameCell']").contains("Track 6").should("not.exist");
   });
 });

@@ -51,11 +51,11 @@ export const baseUrl = import.meta.env.PROD
 
 export async function getLibrary({
   libraryPath,
-  setLibraryData,
+  setFlatLibrary,
 }: {
   libraryPath: string;
-  setLibraryData: React.Dispatch<
-    React.SetStateAction<LibraryData[] | undefined>
+  setFlatLibrary: React.Dispatch<
+    React.SetStateAction<FlatFileData[]>
   >;
 }) {
   await fetch(`${baseUrl}api/library`, {
@@ -68,7 +68,7 @@ export async function getLibrary({
     }),
   })
     .then((response) => response.json())
-    .then((data) => setLibraryData(createFileTree(`file://${libraryPrefix}`, data)));
+    .then((data) => setFlatLibrary(data));
 }
 
 export function useTreeHelpers(data: LibraryData[] | undefined) {
