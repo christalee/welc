@@ -54,9 +54,7 @@ export async function getLibrary({
   setFlatLibrary,
 }: {
   libraryPath: string;
-  setFlatLibrary: React.Dispatch<
-    React.SetStateAction<FlatFileData[]>
-  >;
+  setFlatLibrary: React.Dispatch<React.SetStateAction<FlatFileData[]>>;
 }) {
   await fetch(`${baseUrl}api/library`, {
     method: "POST",
@@ -185,25 +183,35 @@ const formatNode = (
   root: string = "file://",
 ): LibraryData => {
   const [name, childMap] = item;
-  const filepath = decodeURIComponent(new URL(name, root).href);
-  const node: LibraryData = {
-    name,
-    filepath,
-    metadata: {},
-    children: [],
-  };
+  try {
+    const filepath = decodeURI(new URL(name, root).href);
+    const node: LibraryData = {
+      name,
+      filepath,
+      metadata: {},
+      children: [],
+    };
 
-  if (metadataMap.has(filepath)) {
-    node.metadata = metadataMap.get(filepath);
+    if (metadataMap.has(filepath)) {
+      node.metadata = metadataMap.get(filepath);
+    }
+
+    if (childMap.size > 0) {
+      node.children = Array.from(childMap)
+        .map((item) => formatNode(item, metadataMap, `${filepath}/`))
+        .sort(compareByFilepath);
+    }
+
+    return node;
+  } catch (error) {
+    console.log(item, root);
+    console.log(error);
+    return {
+      name: "",
+      filepath: "",
+      children: [],
+    };
   }
-
-  if (childMap.size > 0) {
-    node.children = Array.from(childMap)
-      .map((item) => formatNode(item, metadataMap, `${filepath}/`))
-      .sort(compareByFilepath);
-  }
-
-  return node;
 };
 
 export const createFileTree = (
