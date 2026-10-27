@@ -183,39 +183,28 @@ const formatNode = (
   root: string = "file://",
 ): LibraryData => {
   const [name, childMap] = item;
-  try {
-    // encode and then decode in case name has a % in it
-    // root is unencoded to start with and stays that way
-    const filepath = decodeURIComponent(
-      new URL(encodeURIComponent(name), root).href,
-    );
-    const node: LibraryData = {
-      name,
-      filepath,
-      metadata: {},
-      children: [],
-    };
+  // encode and then decode in case name, root has a % in it
+  const filepath = decodeURIComponent(
+    new URL(encodeURIComponent(name), encodeURIComponent(root)).href,
+  );
+  const node: LibraryData = {
+    name,
+    filepath,
+    metadata: {},
+    children: [],
+  };
 
-    if (metadataMap.has(filepath)) {
-      node.metadata = metadataMap.get(filepath);
-    }
-
-    if (childMap.size > 0) {
-      node.children = Array.from(childMap)
-        .map((item) => formatNode(item, metadataMap, `${filepath}/`))
-        .sort(compareByFilepath);
-    }
-
-    return node;
-  } catch (error) {
-    console.log(item, root);
-    console.log(error);
-    return {
-      name: name,
-      filepath: "",
-      children: [],
-    };
+  if (metadataMap.has(filepath)) {
+    node.metadata = metadataMap.get(filepath);
   }
+
+  if (childMap.size > 0) {
+    node.children = Array.from(childMap)
+      .map((item) => formatNode(item, metadataMap, `${filepath}/`))
+      .sort(compareByFilepath);
+  }
+
+  return node;
 };
 
 export const createFileTree = (
