@@ -41,8 +41,9 @@ DB_PASSWORD=YOUR_TEST_PASSWORD
 VITE_MUSIC_DIR=/path/to/welc/cypress/fixtures
 ```
 3. Create the relevant tables (from inside the venv): `alembic --name test upgrade head`
-4. Run the frontend tests headless (`npm run ci`) or interactively (`npm run api:test && npm run dev:test && npm run cypress`)
-5. Run the backend tests (from the root dir `/welc` with the venv activated): `pytest --envfile .env.testing`
+4. Run the frontend E2E tests headless (`npm run ci`) or interactively (`npm run api:test && npm run dev:test && npm run cypress`)
+5. Run the backend API tests (from the root dir `/welc` with the venv activated): `pytest --envfile .env.testing`
+6. Run the frontend unit tests: `npm run vitest` (watch mode) or `npm run vitest -- run` (single-run mode)
 
 ## Credits
 
