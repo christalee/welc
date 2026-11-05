@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { parseBlob, type IAudioMetadata } from "music-metadata";
 import { shuffle } from "lodash";
 
@@ -15,6 +15,14 @@ function App() {
   const [metadata, setMetadata] = useState<IAudioMetadata | undefined>(
     undefined,
   );
+
+  useEffect(() => {
+    if (metadata) {
+      document.title = `WeLC - ${metadata.common.artist} - ${metadata.common.title}`
+    } else {
+      document.title = 'WeLC'
+    }
+  }, [metadata])
 
   async function playFile(filesArray: (string | File)[], index: number) {
     const file = filesArray[index];

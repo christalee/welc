@@ -4,7 +4,7 @@ A minimal audio player. As of 2026-10-15, it plays music selected from any mount
 
 For insight into how this project is deployed, check out [my blog post](https://christalee.teallabs.org/posts/deploying-welc.html) on that topic.
 
-Up next (2026-10-25): release/deploy script, search bar, history tab
+Up next (2026-11-04): PWA-enablement, routing?, history tab?, crossfading
 
 ## How to run this project
 
