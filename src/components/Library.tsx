@@ -109,7 +109,7 @@ const filterLibrary = ({
   if (searchTerm.length > 0) {
     filteredData = flatLibrary.filter(filterFilepath);
   } else {
-    filteredData = flatLibrary;
+    filteredData = flatLibrary.slice(0, 50);
   }
   setLibraryData(createFileTree(libraryPrefixUri, filteredData));
 };
