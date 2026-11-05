@@ -149,6 +149,7 @@ function TabbedContainer({
 
   async function handlePlaySelected() {
     await startPlaying(filterFiles(librarySelected));
+    setLibrarySelected(new Set());
   }
 
   const tabs = hydrateTabs({

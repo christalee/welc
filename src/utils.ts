@@ -139,16 +139,18 @@ export const cascadeUp = (
 // keep this in sync with the list at the top of api.py
 const AUDIO_EXTENSIONS = [".mp3", ".ogg", ".flac", ".wav", ".m4a"];
 export const filterFiles = (librarySelected: Selection): string[] => {
-  const results = Array.from(librarySelected).filter((entry) => {
-    for (const ext of AUDIO_EXTENSIONS) {
-      if (String(entry).endsWith(ext)) {
-        return true;
+  const results = Array.from(librarySelected)
+    .map((entry) => String(entry))
+    .filter((entry) => {
+      for (const ext of AUDIO_EXTENSIONS) {
+        if (entry.endsWith(ext)) {
+          return true;
+        }
       }
-    }
-    return false;
-  });
+      return false;
+    });
 
-  return results.map((entry) => String(entry)).sort(sortByNameAsc);
+  return results.sort(sortByNameAsc);
 };
 
 export type Metadata = {
