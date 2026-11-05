@@ -1,0 +1,19 @@
+{
+  "name": "WeLC - our audio player",
+  "short_name": "WeLC",
+  "description": "A minimal audio player, by Teal Labs",
+  "icons": [
+    {
+      "src": "/512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone"
+}
