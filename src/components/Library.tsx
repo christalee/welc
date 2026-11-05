@@ -97,7 +97,7 @@ const filterLibrary = ({
     const filepath = decodeURIComponent(
       item.filepath.replace(libraryPrefixUri, ""),
     );
-    const tokens = searchTerm.toLowerCase().split(" ");
+    const tokens = searchTerm.toLowerCase().split(" ").filter((t) => t.length !== 0);
     const indexes = tokens.map((t) => filepath.toLowerCase().search(t));
     if (indexes.includes(-1)) {
       return false;
