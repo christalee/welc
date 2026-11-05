@@ -24,7 +24,7 @@ import {
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { debounce } from "lodash";
+import { debounce, isEqual } from "lodash";
 
 import Checkbox from "./Checkbox";
 import {
@@ -80,6 +80,40 @@ function Column(
   );
 }
 
+const filterLibrary = ({
+  searchTerm,
+  flatLibrary,
+  setLibraryData,
+}: {
+  searchTerm: string;
+  flatLibrary: FlatFileData[];
+  setLibraryData: React.Dispatch<
+    React.SetStateAction<LibraryData[] | undefined>
+  >;
+}) => {
+  let filteredData;
+  const libraryPrefixUri = `file://${libraryPrefix}`;
+  const filterFilepath = (item: FlatFileData) => {
+    const filepath = decodeURIComponent(
+      item.filepath.replace(libraryPrefixUri, ""),
+    );
+    const tokens = searchTerm.toLowerCase().split(" ");
+    const indexes = tokens.map((t) => filepath.toLowerCase().search(t));
+    if (indexes.includes(-1)) {
+      return false;
+    } else {
+      const sorted = indexes.toSorted((a, b) => a - b);
+      return isEqual(indexes, sorted);
+    }
+  };
+  if (searchTerm.length > 0) {
+    filteredData = flatLibrary.filter(filterFilepath);
+  } else {
+    filteredData = flatLibrary;
+  }
+  setLibraryData(createFileTree(libraryPrefixUri, filteredData));
+};
+
 function Library({
   libraryPath,
   flatLibrary,
@@ -91,8 +125,7 @@ function Library({
 }: {
   libraryPath: string;
   flatLibrary: FlatFileData[];
-  setFlatLibrary: React.Dispatch<
-    React.SetStateAction<FlatFileData[]>>;
+  setFlatLibrary: React.Dispatch<React.SetStateAction<FlatFileData[]>>;
   libraryData: LibraryData[] | undefined;
   setLibraryData: React.Dispatch<
     React.SetStateAction<LibraryData[] | undefined>
@@ -158,6 +191,8 @@ function Library({
 
   const debounceGetLibrary = useMemo(() => debounce(getLibrary, 250), []);
 
+  const debounceFilterLibrary = useMemo(() => debounce(filterLibrary, 250), []);
+
   useEffect(() => {
     async function checkLibrary() {
       if (libraryPath.length > 0) {
@@ -168,24 +203,17 @@ function Library({
   }, [libraryPath, setFlatLibrary, debounceGetLibrary]);
 
   useEffect(() => {
-    let filteredData;
-    const libraryPrefixUri = `file://${libraryPrefix}`
-    const filterFilepath = (item: FlatFileData) => {
-      const filepath = decodeURIComponent(item.filepath.replace(libraryPrefixUri, ""))
-      return filepath.toLowerCase().includes(searchTerm.toLowerCase());
-    }
-    if (searchTerm.length > 0) {
-      filteredData = flatLibrary.filter(filterFilepath);
-    } else {
-      filteredData = flatLibrary;
-    }
-    setLibraryData(createFileTree(libraryPrefixUri, filteredData))
-  }, [searchTerm, flatLibrary, setLibraryData])
+    debounceFilterLibrary({ searchTerm, flatLibrary, setLibraryData });
+  }, [searchTerm, flatLibrary, setLibraryData, debounceFilterLibrary]);
 
   return (
     sortedLibrary && (
       <>
-        <SearchField className={styles.search} value={searchTerm} onChange={setSearchTerm}>
+        <SearchField
+          className={styles.search}
+          value={searchTerm}
+          onChange={setSearchTerm}
+        >
           <Label>Filter</Label>
           <Input data-test="searchField" className={styles.searchInput} />
         </SearchField>
