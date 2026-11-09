@@ -91,17 +91,22 @@ const filterLibrary = ({
     React.SetStateAction<LibraryData[] | undefined>
   >;
 }) => {
-  let filteredData;
+  let filteredData: FlatFileData[];
   const libraryPrefixUri = `file://${libraryPrefix}`;
   const filterFilepath = (item: FlatFileData) => {
     const filepath = decodeURIComponent(
       item.filepath.replace(libraryPrefixUri, ""),
     );
-    const tokens = searchTerm.toLowerCase().split(" ").filter((t) => t.length !== 0);
+    const tokens = searchTerm
+      .toLowerCase()
+      .split(" ")
+      .filter((t) => t.length !== 0);
     const indexes = tokens.map((t) => filepath.toLowerCase().search(t));
     if (indexes.includes(-1)) {
+      // One or more terms were not found
       return false;
     } else {
+      // Figure out if the search terms appear in order
       const sorted = indexes.toSorted((a, b) => a - b);
       return isEqual(indexes, sorted);
     }
@@ -109,7 +114,7 @@ const filterLibrary = ({
   if (searchTerm.length > 0) {
     filteredData = flatLibrary.filter(filterFilepath);
   } else {
-    filteredData = flatLibrary.slice(0, 50);
+    filteredData = [];
   }
   setLibraryData(createFileTree(libraryPrefixUri, filteredData));
 };
@@ -215,7 +220,11 @@ function Library({
           onChange={setSearchTerm}
         >
           <Label>Filter</Label>
-          <Input data-test="searchField" className={styles.searchInput} />
+          <Input
+            data-test="searchField"
+            placeholder="' ' to browse"
+            className={styles.searchInput}
+          />
         </SearchField>
         <ResizableTableContainer className={styles.tableContainer}>
           <Table
@@ -289,7 +298,9 @@ function Library({
                           <FontAwesomeIcon icon={faChevronRight} />
                         </Button>
                       )}
-                      {item.metadata?.title ? item.metadata.title : item.name}
+                      <div>
+                        {item.metadata?.title ? item.metadata.title : item.name}
+                      </div>
                     </Cell>
                     <Cell className={`${styles.cell} ${styles.collapse}`}>
                       {item.metadata?.artist ? item.metadata.artist : ""}

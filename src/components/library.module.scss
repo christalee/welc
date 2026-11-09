@@ -7,6 +7,8 @@
 }
 
 .searchInput {
+  width: 50%;
+
   &:focus-visible {
     outline: var(--accent) auto 1px;
   }
@@ -18,6 +20,9 @@
 
 .tableContainer {
   width: 100%;
+  height: auto;
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .table {
@@ -43,9 +48,7 @@
 // keep this aligned with .expandableCell padding
 [data-key="name"] .columnLabel {
   --chevron-placeholder: 24px;
-  margin-left: calc(
-    8px + var(--chevron-placeholder)
-  );
+  margin-left: calc(8px + var(--chevron-placeholder));
 }
 
 .checkboxField {
@@ -78,6 +81,7 @@
 
 // keep this aligned with [data-key="name"] .columnLabel
 .expandableCell {
+  display: flex;
   --chevron-placeholder: 24px;
   padding-inline-start: calc(
     8px + (var(--table-row-level) - 1) * 16px + var(--chevron-placeholder)
@@ -93,6 +97,10 @@
 }
 
 @media (max-width: 500px) {
+  .searchInput {
+    width: 75%;
+  }
+
   .collapse {
     display: none;
   }

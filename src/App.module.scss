@@ -19,6 +19,10 @@
 
 .tabbed {
   padding: 24px 36px;
+
+  @media (max-width: 1024px) {
+    padding: 24px 8px;
+  }
 }
 
 .footer {
